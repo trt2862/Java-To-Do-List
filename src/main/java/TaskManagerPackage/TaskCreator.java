@@ -17,6 +17,7 @@ public class TaskCreator {
     private final int MAX_TASK_NAME_LENGTH = 32;
     private final int MIN_TASK_NAME_LENGTH = 1;
     Task task;
+    DBManager dbm = new DBManager();
 
     public TaskCreator() {
     }
@@ -99,6 +100,7 @@ public class TaskCreator {
                     }
                     //finally write to tasks.txt
                     tfm.writeTasks(newTasks);
+                    dbm.add(task);
                     System.out.println("Work Task Added");
                 }
 
@@ -120,6 +122,7 @@ public class TaskCreator {
                         newTasks.addAll(tfm.readTasks());
                         newTasks.add(build.toString());
                     }
+                    dbm.add(task);
                     tfm.writeTasks(newTasks);
                     System.out.println("Home Task Added.");
                 }

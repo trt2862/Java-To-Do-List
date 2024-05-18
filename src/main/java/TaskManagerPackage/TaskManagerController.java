@@ -17,9 +17,12 @@ public class TaskManagerController {
     TaskFileManager tfm = new TaskFileManager();
     TaskRemover tr = new TaskRemover(tp, iv, tfm);
     TaskUpdater tu = new TaskUpdater(iv, tp, tfm);
+    DBManager dbm;
 
     public TaskManagerController() {
-
+        //initialises Database when application is started.
+        dbm = new DBManager();
+        dbm.initialiseDB();
     }
 
     public void processCommand(String userInput) {
