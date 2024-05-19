@@ -4,8 +4,14 @@
  */
 package TaskManagerPackage;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,6 +23,7 @@ public class TaskPrinter implements Printer {
     TaskCreator tc = new TaskCreator();
     Validator iv = new InputValidator();
     TaskFileManager tfm = new TaskFileManager();
+    DBManager dbm = new DBManager();
 
     public TaskPrinter() {
 
@@ -83,6 +90,93 @@ public class TaskPrinter implements Printer {
         }
         System.out.print("| " + parts[3].trim() + " |"); // Task type
         printBottom();
+    }
+
+    @Override
+    public void printTaskFromDB(int taskId) {
+        ResultSet set = dbm.getTask(taskId);
+    }
+
+    @Override
+    public void printAllTasksFromDB() {
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet resultSet = null;
+        try {
+            conn = dbm.openConnection();
+            conn.setAutoCommit(false); // Ensure auto-commit is disabled
+
+            stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            resultSet = stmt.executeQuery("SELECT * FROM tasks");
+
+            // Get metadata to retrieve column names and count
+            java.sql.ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            // Calculate the width for each column
+            int[] columnWidths = new int[columnCount];
+            for (int i = 1; i <= columnCount; i++) {
+                columnWidths[i - 1] = metaData.getColumnName(i).length();
+            }
+
+            while (resultSet.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    int length = resultSet.getString(i).length();
+                    if (length > columnWidths[i - 1]) {
+                        columnWidths[i - 1] = length;
+                    }
+                }
+            }
+
+            // Print column names with formatting
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.print(padRight(metaData.getColumnName(i), columnWidths[i - 1]) + "\t");
+            }
+            System.out.println();
+
+            // Reset the cursor to the beginning
+            resultSet.beforeFirst();
+
+            // Print each row of the ResultSet
+            while (resultSet.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    System.out.print(padRight(resultSet.getString(i), columnWidths[i - 1]) + "\t");
+                }
+                System.out.println();
+            }
+
+            conn.commit(); // Manually commit the transaction
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            if (conn != null) {
+                try {
+                    conn.rollback(); // Rollback transaction on error
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        } finally {
+            // Close resources
+            try {
+                if (resultSet != null) {
+                    resultSet.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                if (conn != null) {
+                    conn.setAutoCommit(true); // Reset auto-commit to true
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private String padRight(String text, int length) {
+        return String.format("%-" + length + "s", text);
     }
 
     @Override
@@ -160,4 +254,5 @@ public class TaskPrinter implements Printer {
             return 0; // Return 0 if the taskList is null (no tasks)
         }
     }
+
 }

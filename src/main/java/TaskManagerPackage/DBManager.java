@@ -6,6 +6,7 @@ package TaskManagerPackage;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -102,7 +103,7 @@ public class DBManager {
         }
     }
 
-    private Connection openConnection() {
+    public Connection openConnection() {
         Connection conn = null;
         try {
             conn = DriverManager.getConnection(DB_URL);
@@ -112,7 +113,7 @@ public class DBManager {
         return conn;
     }
 
-    private Statement openStatement(Connection conn) {
+    public Statement openStatement(Connection conn) {
         Statement stmt = null;
         try {
             stmt = conn.createStatement();
@@ -167,12 +168,35 @@ public class DBManager {
         //sort list based on a comparator.
     }
 
-    public ResultSet getTask() {
+    public ResultSet getTask(int taskId) {
         String SQL = "SELECT * FROM TASKS WHERE ID = ?";
+        try {
+            conn = DriverManager.getConnection(DB_URL);
+            PreparedStatement stmt = conn.prepareStatement(SQL);
+            stmt.setInt(1, taskId);
+            conn.close();
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
 
     public ResultSet getAllTasks() {
+        String SQL = "SELECT * FROM TASKS";
+        Connection conn = openConnection();
+        try {
+            PreparedStatement stmt = conn.prepareStatement(SQL);
+            return stmt.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         return null;
     }
 }

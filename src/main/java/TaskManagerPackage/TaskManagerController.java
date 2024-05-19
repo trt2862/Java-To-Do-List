@@ -34,7 +34,7 @@ public class TaskManagerController {
             case "display all":
             case "display a":
             case "display al":
-                tp.printDisplayAll();
+                tp.printAllTasksFromDB();
                 break;
             case "display task":
             case "display t":

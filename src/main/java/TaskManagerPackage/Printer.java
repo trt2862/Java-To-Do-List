@@ -19,4 +19,8 @@ public interface Printer {
     // Abstract method to print all commands
     public abstract void printCommands();
 
+    public abstract void printAllTasksFromDB();
+
+    public abstract void printTaskFromDB(int taskID);
+
 }

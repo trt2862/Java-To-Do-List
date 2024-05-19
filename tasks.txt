@@ -10,4 +10,9 @@ it works!|  18-05-2024  |false|Home|
 testing x2|  18-05-2024  |false|Work|
 task to be stored in DB|  19-05-2024  |false|Home|
 new task|  19-05-2024  |false|Home|
+new task|  19-05-2024  |false|Home|
+database task|  19-05-2024  |false|Work|
+testing printing|  19-05-2024  |false|Work|
+new task|  19-05-2024  |false|Home|
+another task|  19-05-2024  |false|Work|
 
