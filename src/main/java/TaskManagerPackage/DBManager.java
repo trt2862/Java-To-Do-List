@@ -166,4 +166,13 @@ public class DBManager {
     public void sort() {
         //sort list based on a comparator.
     }
+
+    public ResultSet getTask() {
+        String SQL = "SELECT * FROM TASKS WHERE ID = ?";
+        return null;
+    }
+
+    public ResultSet getAllTasks() {
+        return null;
+    }
 }
