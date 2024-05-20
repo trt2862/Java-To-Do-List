@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 public class DBManager {
 
     private static final String DB_URL = "jdbc:derby://localhost:1527/TaskManagerDatabase;user=pdc;password=pdc";
-    Connection conn = null;
 
     //to handle DB actions
     //to replace FileManager and tasks.txt
@@ -29,6 +28,7 @@ public class DBManager {
 
     //called by TaskManagerController.
     public void initialiseDB() {
+        Connection conn = null;
         // Load the Derby driver
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
@@ -91,6 +91,7 @@ public class DBManager {
             Connection connection = DriverManager.getConnection(DB_URL);
             if (connection != null) {
                 System.out.println("Connected to the database successfully.");
+                connection.close();
                 return true;
             } else {
                 System.out.println("Failed to connect to the database.");
@@ -104,13 +105,17 @@ public class DBManager {
     }
 
     public Connection openConnection() {
-        Connection conn = null;
+        Connection connection = null;
         try {
-            conn = DriverManager.getConnection(DB_URL);
+            connection = DriverManager.getConnection(DB_URL);
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return conn;
+        return connection;
+    }
+
+    public void closeConnection(Connection connection) throws SQLException {
+        connection.close();
     }
 
     public Statement openStatement(Connection conn) {
@@ -124,8 +129,8 @@ public class DBManager {
     }
 
     public void add(Task task) {
-        Connection conn = openConnection();
-        Statement stmt = openStatement(conn);
+        Connection connection = openConnection();
+        Statement stmt = openStatement(connection);
         try {
             //add task to DB.
             //takes details from task creator.
@@ -137,7 +142,7 @@ public class DBManager {
                     + "'" + task.getType() + "')";
             stmt.executeUpdate(SQL);
             stmt.close();
-            conn.close();
+            closeConnection(connection);
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -170,11 +175,11 @@ public class DBManager {
 
     public ResultSet getTask(int taskId) {
         String SQL = "SELECT * FROM TASKS WHERE ID = ?";
+        Connection connection = openConnection();
         try {
-            conn = DriverManager.getConnection(DB_URL);
-            PreparedStatement stmt = conn.prepareStatement(SQL);
+            PreparedStatement stmt = connection.prepareStatement(SQL);
             stmt.setInt(1, taskId);
-            conn.close();
+            closeConnection(connection);
             return stmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -184,15 +189,15 @@ public class DBManager {
 
     public ResultSet getAllTasks() {
         String SQL = "SELECT * FROM TASKS";
-        Connection conn = openConnection();
+        Connection connection = openConnection();
         try {
-            PreparedStatement stmt = conn.prepareStatement(SQL);
+            PreparedStatement stmt = connection.prepareStatement(SQL);
             return stmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                conn.close();
+                closeConnection(connection);
             } catch (SQLException ex) {
                 Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
             }

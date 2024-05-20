@@ -15,6 +15,7 @@ public class TesterClass {
         DBManager dbm = new DBManager();
         dbm.initialiseDB();
         tp.printAllTasksFromDB();
+        tp.printTaskFromDB(1);
     }
 
 }
