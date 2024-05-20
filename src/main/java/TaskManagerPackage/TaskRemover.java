@@ -17,6 +17,7 @@ public class TaskRemover {
     private final Validator iv;
     private final TaskFileManager tfm;
     private final Scanner scan;
+    private final DBManager dbm = new DBManager();
 
     public TaskRemover(Printer printer, Validator validator, TaskFileManager taskFileManager) {
         tp = (TaskPrinter) printer;
@@ -94,6 +95,85 @@ public class TaskRemover {
             System.out.println("Cancelled.");
         }
         return false;
+    }
+
+    private int removeTaskDialogueDB() {
+        int taskNumber;
+        int totalTasks;
+        if (dbm.isEmpty()) {
+            System.out.println("No Tasks to Remove!");
+        } else {
+            totalTasks = tp.printAllTasksFromDB();
+            System.out.println("Total Tasks: " + totalTasks);
+            String userInput;
+            System.out.println("Select the Task Number (e.g. 1,2,3..) to Remove: ");
+            System.out.print("> ");
+            userInput = scan.nextLine().trim();
+
+            // Validate userInput
+            while (true) {
+                if (userInput.equalsIgnoreCase("exit")) {
+                    return -1;
+                }
+
+                if (!iv.validateNumber(userInput)) {
+                    System.out.println("Incorrect Input.");
+                    System.out.println("Please Select a Task Number: ");
+                    System.out.print("> ");
+                    userInput = scan.nextLine().trim();
+                    continue;
+                }
+
+                taskNumber = Integer.parseInt(userInput);
+
+                if (!dbm.exists(taskNumber)) {
+                    System.out.println("Task Not Found! Double Check Task Exists or Check Task Number.");
+                    System.out.print("> ");
+                    userInput = scan.nextLine().trim();
+                } else {
+                    return taskNumber;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private boolean removeAllDialogueDB() {
+        System.out.println("Are you sure you want to remove all Tasks?");
+        System.out.println("(Y) OR (N)");
+        System.out.println("> ");
+        String userInput = scan.nextLine().trim();
+        if (!userInput.equalsIgnoreCase("Y") && !userInput.equalsIgnoreCase("N")) { // keeps looping until user enters "Y" or "N" or exits
+            while (true) {
+                if (userInput.equalsIgnoreCase("exit")) {
+                    return false;
+                }
+                System.out.println("(Y) OR (N)");
+                System.out.println("> ");
+                userInput = scan.nextLine().trim();
+                if (userInput.equalsIgnoreCase("Y") || userInput.equalsIgnoreCase("N")) {
+                    break;
+                }
+            }
+        }
+        if (userInput.equalsIgnoreCase("Y")) {
+            return true;
+        } else {
+            System.out.println("Cancelled.");
+        }
+        return false;
+    }
+
+    protected void removeTaskFromDB() {
+        int taskToRemove = removeTaskDialogueDB();
+        dbm.remove(taskToRemove);
+    }
+
+    protected void removeAllFromDB() {
+        if (removeAllDialogueDB()) {
+            dbm.removeAll();
+            System.out.println("Tasks Removed Successfully.");
+        }
     }
 
     protected void removeTask() {

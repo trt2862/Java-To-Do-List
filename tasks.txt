@@ -15,4 +15,14 @@ database task|  19-05-2024  |false|Work|
 testing printing|  19-05-2024  |false|Work|
 new task|  19-05-2024  |false|Home|
 another task|  19-05-2024  |false|Work|
+DB test class 1|  20-05-2024  |false|Work|
+DB testing class 2|  20-05-2024  |false|Home|
+testing the DB 3|  20-05-2024  |false|Work|
+new task|  20-05-2024  |false|Home|
+filler|  20-05-2024  |false|Work|
+testing|  20-05-2024  |false|Work|
+new task|  20-05-2024  |false|Home|
+another task|  20-05-2024  |false|Work|
+testing 123|  20-05-2024  |false|Work|
+new task|  20-05-2024  |false|Home|
 

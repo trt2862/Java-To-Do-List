@@ -40,20 +40,20 @@ public class TaskManagerController {
             case "display t":
             case "display ta":
             case "display tas":
-                tp.printDisplay();
+                tp.printTaskFromDB();
                 break;
             case "remove all":
             case "remove a":
             case "remove al":
                 um.commandPush();
-                tr.removeAll();
+                tr.removeAllFromDB();
                 break;
             case "remove task":
             case "remove t":
             case "remove ta":
             case "remove tas":
                 um.commandPush();
-                tr.removeTask();
+                tr.removeTaskFromDB();
                 break;
             case "create":
             case "c":

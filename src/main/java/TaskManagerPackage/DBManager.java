@@ -28,22 +28,19 @@ public class DBManager {
 
     //called by TaskManagerController.
     public void initialiseDB() {
-        Connection conn = null;
+        Connection connection = openConnection();
+        Statement stmt = openStatement(connection);
         // Load the Derby driver
         try {
             Class.forName("org.apache.derby.jdbc.ClientDriver");
         } catch (ClassNotFoundException e) {
             System.out.println("Derby Driver not found.");
-            e.printStackTrace();
         }
         if (checkConnection()) {
-
-            Statement stmt = null;
             ResultSet rs = null;
             try {
                 // Initialise DB
-                conn = DriverManager.getConnection(DB_URL);
-                stmt = conn.createStatement();
+                stmt = connection.createStatement();
 
                 // Check if the table exists
                 String checkTableSQL = "SELECT 1 FROM SYS.SYSTABLES WHERE TABLENAME = 'TASKS'";
@@ -65,27 +62,15 @@ public class DBManager {
                 }
             } catch (SQLException ex) {
                 System.out.println("Error Creating Table: " + ex.getMessage());
-                ex.printStackTrace();
             } finally {
-                try {
-                    if (rs != null) {
-                        rs.close();
-                    }
-                    if (stmt != null) {
-                        stmt.close();
-                    }
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException ex) {
-                    Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                closeResultSet(rs);
+                closeConnection(connection);
+                closeStatement(stmt);
             }
         }
     }
 
     //verifies connection to database.
-    //displays stack trace if error occurs.
     private static boolean checkConnection() {
         try {
             Connection connection = DriverManager.getConnection(DB_URL);
@@ -99,7 +84,6 @@ public class DBManager {
             }
         } catch (SQLException ex) {
             System.out.println("Error connecting to the database: " + ex.getMessage());
-            ex.printStackTrace();
             return false;
         }
     }
@@ -114,8 +98,15 @@ public class DBManager {
         return connection;
     }
 
-    public void closeConnection(Connection connection) throws SQLException {
-        connection.close();
+    public void closeConnection(Connection connection) {
+        if (connection != null) {
+
+            try {
+                connection.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public Statement openStatement(Connection conn) {
@@ -126,6 +117,36 @@ public class DBManager {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return stmt;
+    }
+
+    public void closeStatement(PreparedStatement statement) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void closeStatement(Statement statement) {
+        if (statement != null) {
+            try {
+                statement.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public void closeResultSet(ResultSet rs) {
+        if (rs != null) {
+            try {
+                rs.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public void add(Task task) {
@@ -141,24 +162,107 @@ public class DBManager {
                     + "'" + complete + "', "
                     + "'" + task.getType() + "')";
             stmt.executeUpdate(SQL);
-            stmt.close();
-            closeConnection(connection);
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeStatement(stmt);
+            closeConnection(connection);
         }
     }
 
-    public void remove() {
+    public void remove(int taskId) {
         //remove task from DB..
+        String SQL = "DELETE FROM TASKS WHERE TASKID = ?";
+        Connection connection = openConnection();
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(SQL);
+            stmt.setInt(1, taskId);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeStatement(stmt);
+            closeConnection(connection);
+        }
     }
 
-    public void update() {
+    public void removeAll() {
+        //remove all tasks from DB.
+        String SQL = "DELETE FROM TASKS";
+        Connection connection = openConnection();
+        PreparedStatement stmt = null;
+        try {
+            stmt = connection.prepareStatement(SQL);
+            stmt.executeUpdate();
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeStatement(stmt);
+            closeConnection(connection);
+        }
+    }
+
+    //returns true if list is empty.
+    //returns false if list has content.
+    public boolean isEmpty() {
+        String SQL = "SELECT COUNT(*) FROM TASKS";
+        Connection connection = openConnection();
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = connection.prepareStatement(SQL);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                return count == 0;
+            } else {
+                return true;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            closeResultSet(rs);
+            closeConnection(connection);
+            closeStatement(stmt);
+        }
+        return false;
+    }
+
+    public void update(int taskId) {
         //update existing task in DB
     }
 
-    public boolean exists() {
-        //checks if task exists in DB.
-        return false;
+    public boolean exists(int taskId) {
+        // SQL query to check if a task with the given taskId exists
+        String SQL = "SELECT 1 FROM TASKS WHERE TASKID = ?";
+        Connection connection = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            connection = openConnection();
+            if (connection == null) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, "Failed to establish connection.");
+                return false;
+            }
+
+            stmt = connection.prepareStatement(SQL);
+            stmt.setInt(1, taskId);  // Set taskId parameter
+            rs = stmt.executeQuery();
+
+            // If any row is returned, the task exists
+            return rs.next();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, "Error checking if task exists.", ex);
+            return false;
+        } finally {
+            closeResultSet(rs);
+            closeStatement(stmt);
+            closeConnection(connection);
+        }
     }
 
     public void search() {
@@ -174,16 +278,16 @@ public class DBManager {
     }
 
     public ResultSet getTask(int taskId) {
-        String SQL = "SELECT * FROM TASKS WHERE ID = ?";
+        String SQL = "SELECT * FROM TASKS WHERE TASKID = ?";
         Connection connection = openConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement(SQL);
+            PreparedStatement stmt = connection.prepareStatement(SQL, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             stmt.setInt(1, taskId);
-            closeConnection(connection);
             return stmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
+        closeConnection(connection);
         return null;
     }
 
@@ -191,16 +295,12 @@ public class DBManager {
         String SQL = "SELECT * FROM TASKS";
         Connection connection = openConnection();
         try {
-            PreparedStatement stmt = connection.prepareStatement(SQL);
+            connection.setAutoCommit(false);
+            PreparedStatement stmt = connection.prepareStatement(SQL, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             return stmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                closeConnection(connection);
-            } catch (SQLException ex) {
-                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            closeConnection(connection);
         }
         return null;
     }
