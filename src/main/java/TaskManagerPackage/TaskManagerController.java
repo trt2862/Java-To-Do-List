@@ -62,7 +62,7 @@ public class TaskManagerController {
             case "crea":
             case "creat":
                 um.commandPush();
-                tc.createTask();
+                tc.createTaskDB();
                 break;
             case "?":
                 tp.printCommands();
@@ -79,6 +79,7 @@ public class TaskManagerController {
             case "und":
             case "un":
                 um.commandPop();
+                dbm.undo();
                 break;
             case "u":
                 System.out.println("unambiguous command");

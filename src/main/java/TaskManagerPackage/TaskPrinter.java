@@ -41,6 +41,7 @@ public class TaskPrinter implements Printer {
         System.out.println("? - Display All Commands.");
     }
 
+    //obselete -- updated to work with DB
     @Override
     public void printDisplay() {
 //
@@ -190,6 +191,7 @@ public class TaskPrinter implements Printer {
         return String.format("%-" + length + "s", text);
     }
 
+    //obselete -- updated to work with DB
     @Override
     public int printDisplayAll() {
 //        int lineCount = 1;
@@ -227,7 +229,7 @@ public class TaskPrinter implements Printer {
 //        return lineCount - 1; // returns total number of tasks
         return -1;
     }
-
+    //obselete -- updated to work with DB
     //Formatting Methods
 //    public void printTop() {
 //        int topBarLength = tc.getNameLength() + 8;
@@ -240,7 +242,7 @@ public class TaskPrinter implements Printer {
 //        }
 //        System.out.print("*<Date Created>*<Complete>*<Type>*\n");
 //    }
-//
+//    //obselete -- updated to work with DB
 //    public void printBottom() {
 //        int bottomBarLength = tc.getNameLength() + 43;
 //        System.out.println("\n");
@@ -249,7 +251,7 @@ public class TaskPrinter implements Printer {
 //        }
 //        System.out.println("");
 //    }
-//
+//    //obselete -- updated to work with DB
 //    public String printSpaces(int maxLength, int nameLength) {
 //        String spaces = "";
 //        for (int i = 0; i < ((maxLength - nameLength) + 1); i++) {
@@ -257,7 +259,7 @@ public class TaskPrinter implements Printer {
 //        }
 //        return spaces;
 //    }
-//
+//    //obselete -- updated to work with DB
 //    public int getTasksLength() {
 //        ArrayList<String> taskList = tfm.readTasks();
 //        if (taskList != null) {
