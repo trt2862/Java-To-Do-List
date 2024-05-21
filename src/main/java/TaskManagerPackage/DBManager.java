@@ -256,8 +256,43 @@ public class DBManager {
         return false;
     }
 
-    public void update(int taskId) {
-        //update existing task in DB
+    //set value using generics
+    public <E> void update(int taskId, String columnName, E value) {
+        // Update existing task in DB
+        String SQL = "UPDATE TASKS SET " + columnName + " = ? WHERE TASKID = ?";
+        Connection connection = openConnection();
+        PreparedStatement stmt = null;
+        try {
+            connection.setAutoCommit(false);
+            stmt = connection.prepareStatement(SQL);
+
+            if (value instanceof String) {
+                //Capitalise first letter.
+                String str = (String) value;
+                String cap = str.substring(0, 1).toUpperCase() + str.substring(1);
+                stmt.setString(1, cap);
+            } else if (value instanceof Character) {
+                stmt.setString(1, value.toString());
+            } else {
+                throw new IllegalArgumentException("Unsupported type: " + value.getClass().getName());
+            }
+
+            stmt.setInt(2, taskId);
+            stmt.executeUpdate();
+            connection.commit();
+        } catch (SQLException ex) {
+            try {
+                if (connection != null) {
+                    connection.rollback();
+                }
+            } catch (SQLException rollbackEx) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, "Rollback failed", rollbackEx);
+            }
+            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, "Update failed", ex);
+        } finally {
+            closeStatement(stmt);
+            closeConnection(connection);
+        }
     }
 
     //checks if given ID exists in DB

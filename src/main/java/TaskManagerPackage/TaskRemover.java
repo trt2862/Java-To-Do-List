@@ -26,79 +26,6 @@ public class TaskRemover {
         scan = new Scanner(System.in);
     }
 
-    //obselete -- updated to work with DB
-    private int removeTaskDialogue() {
-//        int taskNumber;
-//        int totalTasks;
-//        if (iv.isEmpty()) {
-//            System.out.println("No Tasks to Remove!");
-//        } else {
-//            totalTasks = tp.printDisplayAll();
-//            String userInput;
-//            System.out.println("Select the Task Number (e.g. 1,2,3..) to Remove: ");
-//            System.out.print("> ");
-//            userInput = scan.nextLine().trim();
-//
-//            // Validate userInput
-//            while (true) {
-//                if (userInput.equalsIgnoreCase("exit")) {
-//                    return -1;
-//                }
-//
-//                if (!iv.validateNumber(userInput)) {
-//                    System.out.println("Incorrect Input.");
-//                    System.out.println("Please Select a Task Number: ");
-//                    System.out.print("> ");
-//                    userInput = scan.nextLine().trim();
-//                    continue;
-//                }
-//
-//                taskNumber = Integer.parseInt(userInput);
-//
-//                if (taskNumber <= 0 || taskNumber > totalTasks) {
-//                    System.out.println("Task Not Found! Double Check Task Exists or Check Task Number.");
-//                    System.out.print("> ");
-//                    userInput = scan.nextLine().trim();
-//                } else {
-//                    return taskNumber;
-//                }
-//            }
-//        }
-        return -1;
-    }
-
-    //obselete -- updated to work with DB
-    private boolean removeAllDialogue() {
-//        //confirms with user if they want to remove all tasks.
-//        if (iv.isEmpty() == true) {
-//            System.out.println("No Tasks to Remove!");
-//            return false;
-//        }
-//        System.out.println("Are you sure you want to remove all Tasks?");
-//        System.out.println("(Y) OR (N)");
-//        System.out.println("> ");
-//        String userInput = scan.nextLine().trim();
-//        if (!userInput.equalsIgnoreCase("Y") && !userInput.equalsIgnoreCase("N")) { // keeps looping until user enters "Y" or "N" or exits
-//            while (true) {
-//                if (userInput.equalsIgnoreCase("exit")) {
-//                    return false;
-//                }
-//                System.out.println("(Y) OR (N)");
-//                System.out.println("> ");
-//                userInput = scan.nextLine().trim();
-//                if (userInput.equalsIgnoreCase("Y") || userInput.equalsIgnoreCase("N")) {
-//                    break;
-//                }
-//            }
-//        }
-//        if (userInput.equalsIgnoreCase("Y")) {
-//            return true;
-//        } else {
-//            System.out.println("Cancelled.");
-//        }
-        return false;
-    }
-
     private int removeTaskDialogueDB() {
         int taskNumber;
         int totalTasks;
@@ -198,5 +125,78 @@ public class TaskRemover {
 //            tfm.writeTasks(new ArrayList<>());
 //            System.out.println("Tasks Removed Successfully.");
 //        }
+    }
+
+    //obselete -- updated to work with DB
+    private int removeTaskDialogue() {
+//        int taskNumber;
+//        int totalTasks;
+//        if (iv.isEmpty()) {
+//            System.out.println("No Tasks to Remove!");
+//        } else {
+//            totalTasks = tp.printDisplayAll();
+//            String userInput;
+//            System.out.println("Select the Task Number (e.g. 1,2,3..) to Remove: ");
+//            System.out.print("> ");
+//            userInput = scan.nextLine().trim();
+//
+//            // Validate userInput
+//            while (true) {
+//                if (userInput.equalsIgnoreCase("exit")) {
+//                    return -1;
+//                }
+//
+//                if (!iv.validateNumber(userInput)) {
+//                    System.out.println("Incorrect Input.");
+//                    System.out.println("Please Select a Task Number: ");
+//                    System.out.print("> ");
+//                    userInput = scan.nextLine().trim();
+//                    continue;
+//                }
+//
+//                taskNumber = Integer.parseInt(userInput);
+//
+//                if (taskNumber <= 0 || taskNumber > totalTasks) {
+//                    System.out.println("Task Not Found! Double Check Task Exists or Check Task Number.");
+//                    System.out.print("> ");
+//                    userInput = scan.nextLine().trim();
+//                } else {
+//                    return taskNumber;
+//                }
+//            }
+//        }
+        return -1;
+    }
+
+    //obselete -- updated to work with DB
+    private boolean removeAllDialogue() {
+//        //confirms with user if they want to remove all tasks.
+//        if (iv.isEmpty() == true) {
+//            System.out.println("No Tasks to Remove!");
+//            return false;
+//        }
+//        System.out.println("Are you sure you want to remove all Tasks?");
+//        System.out.println("(Y) OR (N)");
+//        System.out.println("> ");
+//        String userInput = scan.nextLine().trim();
+//        if (!userInput.equalsIgnoreCase("Y") && !userInput.equalsIgnoreCase("N")) { // keeps looping until user enters "Y" or "N" or exits
+//            while (true) {
+//                if (userInput.equalsIgnoreCase("exit")) {
+//                    return false;
+//                }
+//                System.out.println("(Y) OR (N)");
+//                System.out.println("> ");
+//                userInput = scan.nextLine().trim();
+//                if (userInput.equalsIgnoreCase("Y") || userInput.equalsIgnoreCase("N")) {
+//                    break;
+//                }
+//            }
+//        }
+//        if (userInput.equalsIgnoreCase("Y")) {
+//            return true;
+//        } else {
+//            System.out.println("Cancelled.");
+//        }
+        return false;
     }
 }

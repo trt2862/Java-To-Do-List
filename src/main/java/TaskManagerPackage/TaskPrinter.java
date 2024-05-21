@@ -31,8 +31,8 @@ public class TaskPrinter implements Printer {
     @Override
     public void printCommands() {
         System.out.println("Create - Creates new Task - SUPPORTS DB");
-        System.out.println("Update - Update Created Tasks");
-        System.out.println("Undo - Undo Previous Operation");
+        System.out.println("Update - Update Created Tasks - SUPPORTS DB");
+        System.out.println("Undo - Undo Previous Operation - UNSUPPORTED BY DB");
         System.out.println("Remove Task - Removes Task Entirely - SUPPORTS DB");
         System.out.println("Remove All - Removes ALL TASKS - SUPPORTS DB");
         System.out.println("Display All - Displays All Tasks - SUPPORTS DB");
@@ -41,64 +41,14 @@ public class TaskPrinter implements Printer {
         System.out.println("? - Display All Commands.");
     }
 
-    //obselete -- updated to work with DB
-    @Override
-    public void printDisplay() {
-//
-//        if (iv.isEmpty() == true) {
-//            System.out.println("No Tasks to Display!"); // checks if tasks.txt is empty, by checking if first line is null.
-//            return;
-//        }
-//        System.out.println("Select the Task Number (e.g. 1,2,3..) to Display: ");
-//        String userInput = scan.nextLine().trim();
-//        userInput = iv.validateTaskExists(userInput, tfm.readTasks().size());
-//
-//        while (!iv.validateNumber(userInput) || Integer.parseInt(userInput) < 1 || Integer.parseInt(userInput) > getTasksLength()) {
-//            if (userInput.equalsIgnoreCase("exit")) {
-//                return;
-//            }
-//            System.out.println("Incorrect Input.");
-//            System.out.println("Please Select a Task Number: ");
-//            userInput = scan.nextLine().trim();
-//        }
-//        int lineNumberToDisplay = Integer.parseInt(userInput);//input validated by inputValidator Class above.
-//
-//        String task;
-//        task = tfm.readTasks(lineNumberToDisplay);
-//        if (task == null) {
-//            System.out.println("Task Not Found! Double Check Task Exists or Check Task Number.");
-//            return;
-//        }
-//
-//        //prints top bar
-//        printTop();
-//
-//        //prints task selected by user
-//        String[] parts = task.split("\\|");
-//        System.out.print("\nTask " + lineNumberToDisplay + ": ");
-//
-//        //prints spaces after task name to ensure nice formatting
-//        int maxLength = tc.getNameLength();
-//        int nameLength = parts[0].length();
-//        String spaces = printSpaces(maxLength, nameLength);
-//        System.out.print(parts[0] + spaces + "|"); // Task Name
-//        System.out.print(parts[1] + "| "); // Date Created
-//        if (parts[2].equalsIgnoreCase("true")) { // Task Status
-//            System.out.print("Complete ");
-//        } else {
-//            System.out.print("Pending  ");
-//        }
-//        System.out.print("| " + parts[3].trim() + " |"); // Task type
-//        printBottom();
-    }
-
-    @Override
-    public void printTaskFromDB(int taskId) {
+    private void printTaskFromDB(int taskId) {
+        ResultSet set = dbm.getTask(taskId);
         try {
-            ResultSet set = dbm.getTask(taskId);
             formatTasks(set);
         } catch (SQLException ex) {
             Logger.getLogger(TaskPrinter.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            dbm.closeResultSet(set);
         }
     }
 
@@ -132,11 +82,13 @@ public class TaskPrinter implements Printer {
     @Override
     public int printAllTasksFromDB() {
         int rowCount = 0;
+        ResultSet resultSet = dbm.getAllTasks();
         try {
-            ResultSet resultSet = dbm.getAllTasks();
             rowCount = formatTasks(resultSet);
         } catch (SQLException ex) {
             Logger.getLogger(TaskPrinter.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            dbm.closeResultSet(resultSet);
         }
         return rowCount;
     }
@@ -229,6 +181,7 @@ public class TaskPrinter implements Printer {
 //        return lineCount - 1; // returns total number of tasks
         return -1;
     }
+
     //obselete -- updated to work with DB
     //Formatting Methods
 //    public void printTop() {
@@ -268,4 +221,54 @@ public class TaskPrinter implements Printer {
 //            return 0; // Return 0 if the taskList is null (no tasks)
 //        }
 //    }
+    //obselete -- updated to work with DB
+    @Override
+    public void printDisplay() {
+//
+//        if (iv.isEmpty() == true) {
+//            System.out.println("No Tasks to Display!"); // checks if tasks.txt is empty, by checking if first line is null.
+//            return;
+//        }
+//        System.out.println("Select the Task Number (e.g. 1,2,3..) to Display: ");
+//        String userInput = scan.nextLine().trim();
+//        userInput = iv.validateTaskExists(userInput, tfm.readTasks().size());
+//
+//        while (!iv.validateNumber(userInput) || Integer.parseInt(userInput) < 1 || Integer.parseInt(userInput) > getTasksLength()) {
+//            if (userInput.equalsIgnoreCase("exit")) {
+//                return;
+//            }
+//            System.out.println("Incorrect Input.");
+//            System.out.println("Please Select a Task Number: ");
+//            userInput = scan.nextLine().trim();
+//        }
+//        int lineNumberToDisplay = Integer.parseInt(userInput);//input validated by inputValidator Class above.
+//
+//        String task;
+//        task = tfm.readTasks(lineNumberToDisplay);
+//        if (task == null) {
+//            System.out.println("Task Not Found! Double Check Task Exists or Check Task Number.");
+//            return;
+//        }
+//
+//        //prints top bar
+//        printTop();
+//
+//        //prints task selected by user
+//        String[] parts = task.split("\\|");
+//        System.out.print("\nTask " + lineNumberToDisplay + ": ");
+//
+//        //prints spaces after task name to ensure nice formatting
+//        int maxLength = tc.getNameLength();
+//        int nameLength = parts[0].length();
+//        String spaces = printSpaces(maxLength, nameLength);
+//        System.out.print(parts[0] + spaces + "|"); // Task Name
+//        System.out.print(parts[1] + "| "); // Date Created
+//        if (parts[2].equalsIgnoreCase("true")) { // Task Status
+//            System.out.print("Complete ");
+//        } else {
+//            System.out.print("Pending  ");
+//        }
+//        System.out.print("| " + parts[3].trim() + " |"); // Task type
+//        printBottom();
+    }
 }

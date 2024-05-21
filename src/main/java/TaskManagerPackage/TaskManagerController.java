@@ -45,14 +45,14 @@ public class TaskManagerController {
             case "remove all":
             case "remove a":
             case "remove al":
-                um.commandPush();
+//                um.commandPush();
                 tr.removeAllFromDB();
                 break;
             case "remove task":
             case "remove t":
             case "remove ta":
             case "remove tas":
-                um.commandPush();
+//                um.commandPush();
                 tr.removeTaskFromDB();
                 break;
             case "create":
@@ -61,7 +61,7 @@ public class TaskManagerController {
             case "cre":
             case "crea":
             case "creat":
-                um.commandPush();
+//                um.commandPush();
                 tc.createTaskDB();
                 break;
             case "?":
@@ -72,13 +72,13 @@ public class TaskManagerController {
             case "upd":
             case "upda":
             case "updat":
-                tu.updateCompleteStatus();
+                tu.updateCompleteStatusDB();
                 break;
 
             case "undo":
             case "und":
             case "un":
-                um.commandPop();
+//                um.commandPop();
                 dbm.undo();
                 break;
             case "u":

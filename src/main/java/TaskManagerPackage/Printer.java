@@ -22,9 +22,7 @@ public interface Printer {
     // Abstract method to print all tasks in Database
     public abstract int printAllTasksFromDB();
 
-    // Abstract methods to print a single task in Database
-    public abstract void printTaskFromDB(int taskID);
-
+    // Abstract method to print a single task in Database
     public abstract void printTaskFromDB();
 
 }
