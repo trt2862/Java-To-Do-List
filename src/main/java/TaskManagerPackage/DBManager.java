@@ -59,7 +59,7 @@ public class DBManager {
                             + "taskID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
                             + "TaskName VARCHAR(32), "
                             + "DateCreated VARCHAR(10), "
-                            + "Complete CHAR(1), "
+                            + "Complete VARCHAR(1), "
                             + "TaskType VARCHAR(255)"
                             + ")";
                     stmt.executeUpdate(initTableSQL);
