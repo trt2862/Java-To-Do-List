@@ -20,25 +20,31 @@ import java.util.logging.Logger;
  */
 public class DBManager {
 
-    private static final String DB_URL = "jdbc:derby://localhost:1527/TaskManagerDatabase;user=pdc;password=pdc";
+    private static final String USER_NAME = "pdc";
+    private static final String PASSWORD = "pdc";
+    private static final String DB_URL = "jdbc:derby:TaskManagerDatabase;create=true";
 
     //to handle DB actions
     //to replace FileManager and tasks.txt
     public DBManager() {
     }
 
-    //called by TaskManagerController.
+    //called by TaskManagerController to initialise the DB.
     public void initialiseDB() {
-        Connection connection = openConnection();
-        Statement stmt = openStatement(connection);
-        //load the Derby driver
+        //load the Embedded Derby Drivers.
         try {
-            Class.forName("org.apache.derby.jdbc.ClientDriver");
+            Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+            System.out.println("Derby Driver loaded successfully.");
         } catch (ClassNotFoundException e) {
             System.out.println("Derby Driver not found.");
+            return;
         }
-        if (checkConnection()) {
-            ResultSet rs = null;
+
+        //open connection and statement
+        Connection connection = openConnection();
+        Statement stmt = openStatement(connection);
+        ResultSet rs = null;
+        if (checkConnection(connection)) {
             try {
                 //initialise DB
                 stmt = connection.createStatement();
@@ -48,7 +54,7 @@ public class DBManager {
                 rs = stmt.executeQuery(checkTableSQL);
 
                 if (!rs.next()) {
-                    //table does not exist, create it
+                    //table doesn't exist, so create it
                     String initTableSQL = "CREATE TABLE TASKS ("
                             + "taskID INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
                             + "TaskName VARCHAR(32), "
@@ -65,27 +71,9 @@ public class DBManager {
                 System.out.println("Error Creating Table: " + ex.getMessage());
             } finally {
                 closeResultSet(rs);
-                closeConnection(connection);
                 closeStatement(stmt);
+                closeConnection(connection);
             }
-        }
-    }
-
-    //verifies connection to database.
-    private static boolean checkConnection() {
-        try {
-            Connection connection = DriverManager.getConnection(DB_URL);
-            if (connection != null) {
-                System.out.println("Connected to the database successfully.");
-                connection.close();
-                return true;
-            } else {
-                System.out.println("Failed to connect to the database.");
-                return false;
-            }
-        } catch (SQLException ex) {
-            System.out.println("Error connecting to the database: " + ex.getMessage());
-            return false;
         }
     }
 
@@ -93,11 +81,26 @@ public class DBManager {
     public Connection openConnection() {
         Connection connection = null;
         try {
-            connection = DriverManager.getConnection(DB_URL);
+            connection = DriverManager.getConnection(DB_URL, USER_NAME, PASSWORD);
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
         }
         return connection;
+    }
+
+    private boolean checkConnection(Connection connection) {
+        try {
+            if (connection != null && !connection.isClosed()) {
+                System.out.println("Connected to the database successfully.");
+                return true;
+            } else {
+                System.out.println("Failed to connect to the database.");
+                return false;
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error checking connection to the database: " + ex.getMessage());
+            return false;
+        }
     }
 
     //closes connection to DB
@@ -180,20 +183,18 @@ public class DBManager {
         } finally {
             closeStatement(stmt);
             closeConnection(connection);
-            System.out.println("Task Added Successfully.");
+            System.out.println("Task Added to DB Successfully.");
         }
     }
 
     //removes task from DB using matching taskID
     public void remove(int taskId) {
         //remove task from DB..
-        String saveMessage = "Before removing: " + taskId;
         String SQL = "DELETE FROM TASKS WHERE TASKID = ?";
         Connection connection = openConnection();
         PreparedStatement stmt = null;
         try {
             connection.setAutoCommit(false);
-            Savepoint savepoint = connection.setSavepoint(saveMessage);
             stmt = connection.prepareStatement(SQL);
             stmt.setInt(1, taskId);
             stmt.executeUpdate();
@@ -211,12 +212,10 @@ public class DBManager {
     public void removeAll() {
         //remove all tasks from DB.
         String SQL = "DELETE FROM TASKS";
-        String saveMessage = "Before removing all tasks";
         Connection connection = openConnection();
         PreparedStatement stmt = null;
         try {
             connection.setAutoCommit(false); //begin transaction with DB
-            Savepoint savepoint = connection.setSavepoint(saveMessage); //save state of DB
             stmt = connection.prepareStatement(SQL);
             stmt.executeUpdate();
             connection.commit(); //end transaction with DB
@@ -258,7 +257,7 @@ public class DBManager {
 
     //set value using generics
     public <E> void update(int taskId, String columnName, E value) {
-        // Update existing task in DB
+        //update existing task in DB
         String SQL = "UPDATE TASKS SET " + columnName + " = ? WHERE TASKID = ?";
         Connection connection = openConnection();
         PreparedStatement stmt = null;
@@ -267,27 +266,20 @@ public class DBManager {
             stmt = connection.prepareStatement(SQL);
 
             if (value instanceof String) {
-                //Capitalise first letter.
+                //capitalise first letter.
                 String str = (String) value;
                 String cap = str.substring(0, 1).toUpperCase() + str.substring(1);
                 stmt.setString(1, cap);
             } else if (value instanceof Character) {
                 stmt.setString(1, value.toString());
             } else {
-                throw new IllegalArgumentException("Unsupported type: " + value.getClass().getName());
+                throw new IllegalArgumentException("Unsupported type: ");
             }
 
             stmt.setInt(2, taskId);
             stmt.executeUpdate();
             connection.commit();
         } catch (SQLException ex) {
-            try {
-                if (connection != null) {
-                    connection.rollback();
-                }
-            } catch (SQLException rollbackEx) {
-                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, "Rollback failed", rollbackEx);
-            }
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, "Update failed", ex);
         } finally {
             closeStatement(stmt);
@@ -297,7 +289,7 @@ public class DBManager {
 
     //checks if given ID exists in DB
     public boolean exists(int taskId) {
-        // SQL query to check if a task with the given taskId exists
+        //SQL query to check if a task with the given taskId exists
         String SQL = "SELECT 1 FROM TASKS WHERE TASKID = ?";
         Connection connection = null;
         PreparedStatement stmt = null;
@@ -348,10 +340,6 @@ public class DBManager {
 //            closeConnection(connection);
 //            closeStatement(stmt);
 //        }
-    }
-
-    public void sort() {
-        //sort list based on a comparator.
     }
 
     //gets resultset of task to be parsed for printing
