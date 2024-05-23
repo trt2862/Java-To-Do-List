@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -22,6 +23,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
      * Creates new form TaskManagerGUI
      */
     DBManager dbm = new DBManager();
+    TaskCreator tc = new TaskCreator();
 
     public TaskManagerGUI() {
         initComponents();
@@ -37,11 +39,57 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        addTaskDialogueBox = new javax.swing.JDialog();
+        addTaskTextField = new javax.swing.JTextField();
+        taskTypeComboBox = new javax.swing.JComboBox<>();
+        dialogAddTaskBtn = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        AddTaskBtn = new javax.swing.JButton();
+        SortByBtn = new javax.swing.JButton();
+        RemoveAllTasksBtn1 = new javax.swing.JButton();
+
+        addTaskDialogueBox.setAutoRequestFocus(false);
+        addTaskDialogueBox.setMinimumSize(new java.awt.Dimension(300, 150));
+
+        addTaskTextField.setText("Task Name...");
+
+        taskTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Work", "Home" }));
+
+        dialogAddTaskBtn.setText("Add Task");
+        dialogAddTaskBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                dialogAddTaskBtnMousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout addTaskDialogueBoxLayout = new javax.swing.GroupLayout(addTaskDialogueBox.getContentPane());
+        addTaskDialogueBox.getContentPane().setLayout(addTaskDialogueBoxLayout);
+        addTaskDialogueBoxLayout.setHorizontalGroup(
+            addTaskDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addTaskDialogueBoxLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(addTaskDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(addTaskTextField)
+                    .addGroup(addTaskDialogueBoxLayout.createSequentialGroup()
+                        .addComponent(taskTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 186, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, addTaskDialogueBoxLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(dialogAddTaskBtn)))
+                .addContainerGap())
+        );
+        addTaskDialogueBoxLayout.setVerticalGroup(
+            addTaskDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(addTaskDialogueBoxLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(addTaskTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(taskTypeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                .addComponent(dialogAddTaskBtn)
+                .addContainerGap())
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,11 +111,21 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(jTable1);
 
-        jButton1.setText("jButton1");
+        AddTaskBtn.setText("Add New Task");
+        AddTaskBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                AddTaskBtnMouseClicked(evt);
+            }
+        });
 
-        jButton2.setText("jButton2");
+        SortByBtn.setText("Sort By...");
+        SortByBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SortByBtnActionPerformed(evt);
+            }
+        });
 
-        jButton3.setText("jButton3");
+        RemoveAllTasksBtn1.setText("Remove All Tasks");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -78,11 +136,12 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 875, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(AddTaskBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(RemoveAllTasksBtn1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(SortByBtn)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -90,9 +149,9 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(AddTaskBtn)
+                    .addComponent(SortByBtn)
+                    .addComponent(RemoveAllTasksBtn1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(116, Short.MAX_VALUE))
@@ -100,6 +159,43 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void SortByBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SortByBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_SortByBtnActionPerformed
+
+    private void AddTaskBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AddTaskBtnMouseClicked
+        addTaskTextField.setText("Task Name...");
+        addTaskDialogueBox.setVisible(true);
+        addTaskDialogueBox.setLocationRelativeTo(this);
+        //textfield
+        //combo box
+        //String name = textfield
+        //String type = combo box
+    }//GEN-LAST:event_AddTaskBtnMouseClicked
+
+    private void dialogAddTaskBtnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dialogAddTaskBtnMousePressed
+        // TODO add your handling code here:
+        Task task;
+        String taskName = addTaskTextField.getText().trim();
+        String taskType = (String) taskTypeComboBox.getSelectedItem();
+        if (taskName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Task Name Must Contain a Value!");
+        } else if (taskName.length() > 32) {
+            JOptionPane.showMessageDialog(this, "Task Name is too Long! Maximum 32 Characters");
+        } else if (taskName.length() < 1) {
+            JOptionPane.showMessageDialog(this, "Task Name is too Short! Minimum 1 Character");
+        }
+        if ("Home".equals(taskType)) {
+            task = new HomeTask();
+        } else {
+            task = new WorkTask();
+        }
+        task.setTaskName(taskName);
+        dbm.add(task);
+        populateJTable();
+        addTaskDialogueBox.setVisible(false);
+    }//GEN-LAST:event_dialogAddTaskBtnMousePressed
 
     /**
      * @param args the command line arguments
@@ -140,6 +236,8 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         Connection connection = dbm.openConnection();
         Statement stmt = dbm.openStatement(connection);
         ResultSet rs = dbm.getAllTasks();
+        DefaultTableModel tableMdl = (DefaultTableModel) jTable1.getModel();
+        tableMdl.setRowCount(0);
 
         try {
             while (rs.next()) {
@@ -149,7 +247,6 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 String type = rs.getString("TaskType");
 
                 String dbData[] = {id, name, complete, type};
-                DefaultTableModel tableMdl = (DefaultTableModel) jTable1.getModel();
                 tableMdl.addRow(dbData);
             }
         } catch (SQLException ex) {
@@ -162,10 +259,14 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JButton AddTaskBtn;
+    private javax.swing.JButton RemoveAllTasksBtn1;
+    private javax.swing.JButton SortByBtn;
+    private javax.swing.JDialog addTaskDialogueBox;
+    private javax.swing.JTextField addTaskTextField;
+    private javax.swing.JButton dialogAddTaskBtn;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JComboBox<String> taskTypeComboBox;
     // End of variables declaration//GEN-END:variables
 }
