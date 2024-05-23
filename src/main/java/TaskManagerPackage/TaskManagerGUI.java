@@ -43,6 +43,10 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         addTaskTextField = new javax.swing.JTextField();
         taskTypeComboBox = new javax.swing.JComboBox<>();
         dialogAddTaskBtn = new javax.swing.JButton();
+        removeAllDialogue = new javax.swing.JDialog();
+        removeAllLabel = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         AddTaskBtn = new javax.swing.JButton();
@@ -89,6 +93,40 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
                 .addComponent(dialogAddTaskBtn)
                 .addContainerGap())
+        );
+
+        removeAllLabel.setText("Are you sure you want to remove all tasks?");
+
+        jButton1.setText("jButton1");
+
+        jButton2.setText("jButton2");
+
+        javax.swing.GroupLayout removeAllDialogueLayout = new javax.swing.GroupLayout(removeAllDialogue.getContentPane());
+        removeAllDialogue.getContentPane().setLayout(removeAllDialogueLayout);
+        removeAllDialogueLayout.setHorizontalGroup(
+            removeAllDialogueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(removeAllDialogueLayout.createSequentialGroup()
+                .addContainerGap(83, Short.MAX_VALUE)
+                .addGroup(removeAllDialogueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, removeAllDialogueLayout.createSequentialGroup()
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(116, 116, 116))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, removeAllDialogueLayout.createSequentialGroup()
+                        .addComponent(removeAllLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(68, 68, 68))))
+        );
+        removeAllDialogueLayout.setVerticalGroup(
+            removeAllDialogueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(removeAllDialogueLayout.createSequentialGroup()
+                .addGap(76, 76, 76)
+                .addComponent(removeAllLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(removeAllDialogueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
+                .addContainerGap(168, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -265,8 +303,12 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     private javax.swing.JDialog addTaskDialogueBox;
     private javax.swing.JTextField addTaskTextField;
     private javax.swing.JButton dialogAddTaskBtn;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JDialog removeAllDialogue;
+    private javax.swing.JLabel removeAllLabel;
     private javax.swing.JComboBox<String> taskTypeComboBox;
     // End of variables declaration//GEN-END:variables
 }

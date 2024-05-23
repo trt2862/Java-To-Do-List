@@ -79,9 +79,6 @@ public class TaskCreator extends JFrame {
         }
     }
 
-    protected void createTaskGUI(JTextField nameField, JComboBox<String> taskTypeBox) {
-    }
-
     //obselete -- updated to work with DB
     protected Task createTask() {
 //        //File IO class
@@ -186,5 +183,9 @@ public class TaskCreator extends JFrame {
 //            }
 //        }
         return null;
+    }
+
+    void createTaskGUI(JTextField addTaskTextField, JComboBox<String> taskTypeComboBox, TaskManagerGUI aThis) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
