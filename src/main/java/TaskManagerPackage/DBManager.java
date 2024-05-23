@@ -22,7 +22,7 @@ public class DBManager {
 
     private static final String USER_NAME = "pdc";
     private static final String PASSWORD = "pdc";
-    private static final String DB_URL = "jdbc:derby:TaskManagerDatabase;create=true";
+    private static final String DB_URL = "jdbc:derby:TaskManagerDatabase(1);create=true";
 
     //to handle DB actions
     //to replace FileManager and tasks.txt

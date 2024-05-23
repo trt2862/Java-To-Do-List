@@ -6,12 +6,13 @@ package TaskManagerPackage;
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import javax.swing.*;
 
 /**
  *
  * @author Caleb
  */
-public class TaskCreator {
+public class TaskCreator extends JFrame {
 
     //Minimum/Maximum value incase you want to create restrictions in future.
     private final int MAX_TASK_NAME_LENGTH = 32;
@@ -20,6 +21,7 @@ public class TaskCreator {
     DBManager dbm = new DBManager();
 
     public TaskCreator() {
+
     }
 
     //returns maximum name length of a task.
@@ -75,6 +77,9 @@ public class TaskCreator {
             task.setTaskName(taskName);
             dbm.add(task);
         }
+    }
+
+    protected void createTaskGUI(JTextField nameField, JComboBox<String> taskTypeBox) {
     }
 
     //obselete -- updated to work with DB
