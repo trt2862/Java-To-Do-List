@@ -38,6 +38,7 @@ public class TaskManagerApplication {
                     tmc.processCommand(userInput);
                 }
             } while (!userInput.equalsIgnoreCase("exit"));
+            System.exit(0);
         } catch (IOException e) {
             System.out.println("Fatal Error :(");
         }
