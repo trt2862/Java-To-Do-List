@@ -21,6 +21,8 @@ public class TaskManagerApplication {
 
         TaskCreator tc = new TaskCreator();
         TaskManagerController tmc = new TaskManagerController();
+        TaskManagerGUI tmGUI = new TaskManagerGUI();
+        tmGUI.displayTaskManagerGUI();
 
         try ( BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             System.out.println("Enter '?' to see list of commands.");
