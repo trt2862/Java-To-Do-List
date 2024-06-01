@@ -55,6 +55,11 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         sortByJLabel = new javax.swing.JLabel();
         sortByOkButton = new javax.swing.JButton();
         sortByComboBoxSortStyle = new javax.swing.JComboBox<>();
+        jDialog1 = new javax.swing.JDialog();
+        removeSelectedDialogueBox = new javax.swing.JDialog();
+        removeSelectedLabel = new javax.swing.JLabel();
+        removeSelectedNoOption = new javax.swing.JButton();
+        removeSelectedYesOption = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         AddTaskBtn = new javax.swing.JButton();
@@ -62,6 +67,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         RemoveAllTasksBtn1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
+        deleteButton = new javax.swing.JButton();
 
         addTaskDialogueBox.setAutoRequestFocus(false);
         addTaskDialogueBox.setMinimumSize(new java.awt.Dimension(300, 150));
@@ -119,14 +125,17 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         removeAllLabel.setText("Are you sure you want to remove all tasks?");
 
         removeAllNoOption.setText("No");
-        removeAllNoOption.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                removeAllNoOptionActionPerformed(evt);
+        removeAllNoOption.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeAllNoOptionMouseClicked(evt);
             }
         });
 
         removeAllYesOption.setText("Yes");
         removeAllYesOption.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeAllYesOptionMouseClicked(evt);
+            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 removeAllYesOptionMousePressed(evt);
             }
@@ -137,15 +146,15 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         removeAllDialogueBoxLayout.setHorizontalGroup(
             removeAllDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, removeAllDialogueBoxLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(89, Short.MAX_VALUE)
                 .addComponent(removeAllYesOption, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(removeAllNoOption, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(88, 88, 88))
             .addGroup(removeAllDialogueBoxLayout.createSequentialGroup()
-                .addGap(54, 54, 54)
+                .addGap(40, 40, 40)
                 .addComponent(removeAllLabel)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         removeAllDialogueBoxLayout.setVerticalGroup(
             removeAllDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,6 +213,62 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
+        javax.swing.GroupLayout jDialog1Layout = new javax.swing.GroupLayout(jDialog1.getContentPane());
+        jDialog1.getContentPane().setLayout(jDialog1Layout);
+        jDialog1Layout.setHorizontalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
+        );
+        jDialog1Layout.setVerticalGroup(
+            jDialog1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 300, Short.MAX_VALUE)
+        );
+
+        removeSelectedDialogueBox.setMinimumSize(new java.awt.Dimension(345, 110));
+
+        removeSelectedLabel.setText("Are you sure you want to remove selected tasks?");
+
+        removeSelectedNoOption.setText("No");
+        removeSelectedNoOption.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeSelectedNoOptionMouseClicked(evt);
+            }
+        });
+
+        removeSelectedYesOption.setText("Yes");
+        removeSelectedYesOption.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                removeSelectedYesOptionMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout removeSelectedDialogueBoxLayout = new javax.swing.GroupLayout(removeSelectedDialogueBox.getContentPane());
+        removeSelectedDialogueBox.getContentPane().setLayout(removeSelectedDialogueBoxLayout);
+        removeSelectedDialogueBoxLayout.setHorizontalGroup(
+            removeSelectedDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, removeSelectedDialogueBoxLayout.createSequentialGroup()
+                .addContainerGap(89, Short.MAX_VALUE)
+                .addComponent(removeSelectedYesOption, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(removeSelectedNoOption, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(88, 88, 88))
+            .addGroup(removeSelectedDialogueBoxLayout.createSequentialGroup()
+                .addGap(40, 40, 40)
+                .addComponent(removeSelectedLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        removeSelectedDialogueBoxLayout.setVerticalGroup(
+            removeSelectedDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(removeSelectedDialogueBoxLayout.createSequentialGroup()
+                .addContainerGap(32, Short.MAX_VALUE)
+                .addComponent(removeSelectedLabel)
+                .addGap(18, 18, 18)
+                .addGroup(removeSelectedDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(removeSelectedYesOption)
+                    .addComponent(removeSelectedNoOption))
+                .addContainerGap())
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTable1.setAutoCreateRowSorter(true);
@@ -253,6 +318,18 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(jList1);
 
+        deleteButton.setText("Delete Selected...");
+        deleteButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                deleteButtonMouseClicked(evt);
+            }
+        });
+        deleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -263,13 +340,15 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 875, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(AddTaskBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(RemoveAllTasksBtn1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(SortByBtn))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(SortByBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(deleteButton)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -280,7 +359,8 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(AddTaskBtn)
                     .addComponent(SortByBtn)
-                    .addComponent(RemoveAllTasksBtn1))
+                    .addComponent(RemoveAllTasksBtn1)
+                    .addComponent(deleteButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -293,6 +373,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
     private void SortByBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SortByBtnActionPerformed
         // TODO add your handling code here:
+        sortByDialogueBox.setLocationRelativeTo(this);
         sortByDialogueBox.setVisible(true);
     }//GEN-LAST:event_SortByBtnActionPerformed
 
@@ -362,12 +443,6 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         removeAllDialogueBox.setLocationRelativeTo(this);
     }//GEN-LAST:event_RemoveAllTasksBtn1ActionPerformed
 
-    private void removeAllNoOptionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeAllNoOptionActionPerformed
-        // TODO add your handling code here:
-        //sets the dialogue box to invisible
-        removeAllDialogueBox.setVisible(false);
-    }//GEN-LAST:event_removeAllNoOptionActionPerformed
-
     private void sortByOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByOkButtonActionPerformed
         // TODO add your handling code here:
         //get sort key from combo box
@@ -420,6 +495,44 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             addTaskTextField.setForeground(Color.GRAY);
         }
     }//GEN-LAST:event_addTaskTextFieldFocusLost
+
+    private void deleteButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_deleteButtonMouseClicked
+        // TODO add your handling code here:
+//        removeSelectedDialogueBox.setVisible(true);
+    }//GEN-LAST:event_deleteButtonMouseClicked
+
+    private void removeAllYesOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeAllYesOptionMouseClicked
+        // TODO add your handling code here:
+        dbm.removeAll();
+    }//GEN-LAST:event_removeAllYesOptionMouseClicked
+
+    private void removeAllNoOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeAllNoOptionMouseClicked
+        // TODO add your handling code here:
+        removeAllDialogueBox.setVisible(false);
+
+    }//GEN-LAST:event_removeAllNoOptionMouseClicked
+
+    private void removeSelectedNoOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeSelectedNoOptionMouseClicked
+        // TODO add your handling code here:
+        removeSelectedDialogueBox.setVisible(false);
+    }//GEN-LAST:event_removeSelectedNoOptionMouseClicked
+
+    private void removeSelectedYesOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeSelectedYesOptionMouseClicked
+        // TODO add your handling code here:
+        int[] rows = jTable1.getSelectedRows();
+        for (int a : rows) {
+            int taskID = Integer.parseInt(jTable1.getValueAt(a, 0).toString());
+            dbm.remove(taskID);
+        }
+        populateJTable();
+        removeSelectedDialogueBox.setVisible(false);
+    }//GEN-LAST:event_removeSelectedYesOptionMouseClicked
+
+    private void deleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteButtonActionPerformed
+        // TODO add your handling code here:
+        removeSelectedDialogueBox.setLocationRelativeTo(this);
+        removeSelectedDialogueBox.setVisible(true);
+    }//GEN-LAST:event_deleteButtonActionPerformed
 
     public void displayTaskManagerGUI() {
         /* Set the Nimbus look and feel */
@@ -495,7 +608,9 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     private javax.swing.JButton SortByBtn;
     private javax.swing.JDialog addTaskDialogueBox;
     private javax.swing.JTextField addTaskTextField;
+    private javax.swing.JButton deleteButton;
     private javax.swing.JButton dialogAddTaskBtn;
+    private javax.swing.JDialog jDialog1;
     private javax.swing.JList<String> jList1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -504,6 +619,10 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     private javax.swing.JLabel removeAllLabel;
     private javax.swing.JButton removeAllNoOption;
     private javax.swing.JButton removeAllYesOption;
+    private javax.swing.JDialog removeSelectedDialogueBox;
+    private javax.swing.JLabel removeSelectedLabel;
+    private javax.swing.JButton removeSelectedNoOption;
+    private javax.swing.JButton removeSelectedYesOption;
     private javax.swing.JComboBox<String> sortByComboBoxOption;
     private javax.swing.JComboBox<String> sortByComboBoxSortStyle;
     private javax.swing.JDialog sortByDialogueBox;
