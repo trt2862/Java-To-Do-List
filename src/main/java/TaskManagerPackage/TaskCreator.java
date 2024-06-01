@@ -25,8 +25,12 @@ public class TaskCreator extends JFrame {
     }
 
     //returns maximum name length of a task.
-    public int getNameLength() {
+    public int getMaxNameLength() {
         return MAX_TASK_NAME_LENGTH;
+    }
+
+    public int getMinNameLength() {
+        return MIN_TASK_NAME_LENGTH;
     }
 
     protected void createTaskDB() {

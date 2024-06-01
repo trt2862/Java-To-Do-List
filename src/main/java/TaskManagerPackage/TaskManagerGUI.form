@@ -48,7 +48,12 @@
         <Component class="javax.swing.JTextField" name="addTaskTextField">
           <Properties>
             <Property name="text" type="java.lang.String" value="Task Name..."/>
+            <Property name="toolTipText" type="java.lang.String" value="Insert Task Name"/>
           </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="addTaskTextFieldFocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="addTaskTextFieldFocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="taskTypeComboBox">
           <Properties>
@@ -133,6 +138,92 @@
           <Events>
             <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="removeAllYesOptionMousePressed"/>
           </Events>
+        </Component>
+      </SubComponents>
+    </Container>
+    <Container class="javax.swing.JDialog" name="sortByDialogueBox">
+      <Properties>
+        <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[250, 200]"/>
+        </Property>
+      </Properties>
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Component id="sortByComboBoxSortStyle" pref="161" max="32767" attributes="0"/>
+                      <Component id="sortByJLabel" max="32767" attributes="0"/>
+                      <Component id="sortByComboBoxOption" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace pref="85" max="32767" attributes="0"/>
+              </Group>
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="sortByOkButton" min="-2" pref="73" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="0" attributes="0">
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="sortByJLabel" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                  <Component id="sortByComboBoxOption" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="sortByComboBoxSortStyle" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="sortByOkButton" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="24" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+      <SubComponents>
+        <Component class="javax.swing.JComboBox" name="sortByComboBoxOption">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="4">
+                <StringItem index="0" value="Task ID"/>
+                <StringItem index="1" value="Task Name"/>
+                <StringItem index="2" value="Complete"/>
+                <StringItem index="3" value="Type"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="sortByJLabel">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Sort By:"/>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JButton" name="sortByOkButton">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="OK"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sortByOkButtonActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="sortByComboBoxSortStyle">
+          <Properties>
+            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+              <StringArray count="2">
+                <StringItem index="0" value="Ascending"/>
+                <StringItem index="1" value="Descending"/>
+              </StringArray>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
         </Component>
       </SubComponents>
     </Container>
@@ -260,8 +351,8 @@
                 <StringItem index="0" value="TO DO"/>
                 <StringItem index="1" value="delete selected task"/>
                 <StringItem index="2" value="update selected task"/>
-                <StringItem index="3" value="sort tasks"/>
-                <StringItem index="4" value="somehow undo operations ;-;"/>
+                <StringItem index="3" value="somehow undo operations ;-;"/>
+                <StringItem index="4" value="Refactor code across classes"/>
               </StringArray>
             </Property>
           </Properties>

@@ -4,6 +4,7 @@
  */
 package TaskManagerPackage;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -47,6 +50,11 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         removeAllLabel = new javax.swing.JLabel();
         removeAllNoOption = new javax.swing.JButton();
         removeAllYesOption = new javax.swing.JButton();
+        sortByDialogueBox = new javax.swing.JDialog();
+        sortByComboBoxOption = new javax.swing.JComboBox<>();
+        sortByJLabel = new javax.swing.JLabel();
+        sortByOkButton = new javax.swing.JButton();
+        sortByComboBoxSortStyle = new javax.swing.JComboBox<>();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         AddTaskBtn = new javax.swing.JButton();
@@ -59,6 +67,15 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         addTaskDialogueBox.setMinimumSize(new java.awt.Dimension(300, 150));
 
         addTaskTextField.setText("Task Name...");
+        addTaskTextField.setToolTipText("Insert Task Name");
+        addTaskTextField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                addTaskTextFieldFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                addTaskTextFieldFocusLost(evt);
+            }
+        });
 
         taskTypeComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Work", "Home" }));
 
@@ -142,6 +159,51 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        sortByDialogueBox.setMinimumSize(new java.awt.Dimension(250, 200));
+
+        sortByComboBoxOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Task ID", "Task Name", "Complete", "Type" }));
+
+        sortByJLabel.setText("Sort By:");
+
+        sortByOkButton.setText("OK");
+        sortByOkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sortByOkButtonActionPerformed(evt);
+            }
+        });
+
+        sortByComboBoxSortStyle.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Ascending", "Descending" }));
+
+        javax.swing.GroupLayout sortByDialogueBoxLayout = new javax.swing.GroupLayout(sortByDialogueBox.getContentPane());
+        sortByDialogueBox.getContentPane().setLayout(sortByDialogueBoxLayout);
+        sortByDialogueBoxLayout.setHorizontalGroup(
+            sortByDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sortByDialogueBoxLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(sortByDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(sortByComboBoxSortStyle, 0, 161, Short.MAX_VALUE)
+                    .addComponent(sortByJLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(sortByComboBoxOption, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(85, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, sortByDialogueBoxLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(sortByOkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        sortByDialogueBoxLayout.setVerticalGroup(
+            sortByDialogueBoxLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(sortByDialogueBoxLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(sortByJLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(sortByComboBoxOption, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sortByComboBoxSortStyle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sortByOkButton)
+                .addContainerGap(24, Short.MAX_VALUE))
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTable1.setAutoCreateRowSorter(true);
@@ -185,7 +247,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         });
 
         jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "TO DO", "delete selected task", "update selected task", "sort tasks", "somehow undo operations ;-;" };
+            String[] strings = { "TO DO", "delete selected task", "update selected task", "somehow undo operations ;-;", "Refactor code across classes" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
@@ -231,11 +293,13 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
     private void SortByBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SortByBtnActionPerformed
         // TODO add your handling code here:
+        sortByDialogueBox.setVisible(true);
     }//GEN-LAST:event_SortByBtnActionPerformed
 
     private void AddTaskBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_AddTaskBtnMouseClicked
         //prefills text field with "Task Name"
         addTaskTextField.setText("Task Name...");
+        addTaskTextField.setForeground(Color.GRAY);
         //sets dialogue box to visible
         addTaskDialogueBox.setVisible(true);
         //sets position relative to JFrame (task manager GUI)
@@ -248,23 +312,34 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         Task task;
         String taskName = addTaskTextField.getText().trim();
         String taskType = (String) taskTypeComboBox.getSelectedItem();
-        if (taskName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Task Name Must Contain a Value!");
-        } else if (taskName.length() > tc.getNameLength()) {
-            JOptionPane.showMessageDialog(this, "Task Name is too Long! Maximum 32 Characters");
-        } else if (taskName.length() < 1) {
-            JOptionPane.showMessageDialog(this, "Task Name is too Short! Minimum 1 Character");
-        }
-        if ("Home".equals(taskType)) {
-            task = new HomeTask();
+        if (!taskName.isEmpty()
+                && taskName.length() < tc.getMaxNameLength()
+                && taskName.length() >= tc.getMinNameLength()) {
+
+            if (taskName.length() > tc.getMaxNameLength()) {
+                JOptionPane.showMessageDialog(this, "Task Name is too Long! Maximum 32 Characters");
+            } else if (taskName.length() < tc.getMinNameLength()) {
+                JOptionPane.showMessageDialog(this, "Task Name is too Short! Minimum 1 Character");
+            }
+            if ("Home".equals(taskType)) {
+                task = new HomeTask();
+            } else {
+                task = new WorkTask();
+            }
+            task.setTaskName(taskName);
+            //adds task to DB
+            dbm.add(task);
+            //updates Table in JFrame
+            populateJTable();
         } else {
-            task = new WorkTask();
+            if (taskName.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Task Name Must Contain a Value!");
+            } else if (taskName.length() > tc.getMaxNameLength()) {
+                JOptionPane.showMessageDialog(this, "Task Name is too Long! Maximum 32 Characters");
+            } else if (taskName.length() < tc.getMinNameLength()) {
+                JOptionPane.showMessageDialog(this, "Task Name is too Short! Minimum 1 Character");
+            }
         }
-        task.setTaskName(taskName);
-        //adds task to DB
-        dbm.add(task);
-        //updates Table in JFrame
-        populateJTable();
         //sets dialogue box to invisible
         addTaskDialogueBox.setVisible(false);
     }//GEN-LAST:event_dialogAddTaskBtnMousePressed
@@ -292,6 +367,59 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         //sets the dialogue box to invisible
         removeAllDialogueBox.setVisible(false);
     }//GEN-LAST:event_removeAllNoOptionActionPerformed
+
+    private void sortByOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sortByOkButtonActionPerformed
+        // TODO add your handling code here:
+        //get sort key from combo box
+        String sortBy = (String) sortByComboBoxOption.getSelectedItem();
+        String sortStyle = (String) sortByComboBoxSortStyle.getSelectedItem();
+//        System.out.println("sort by: " + sortBy);
+
+        //ensure a selection was made.
+        if (sortBy != null) {
+            //create a new sorter.
+            TableRowSorter<TableModel> sorter = new TableRowSorter<>(jTable1.getModel());
+            jTable1.setRowSorter(sorter);
+
+            //find the index of the sort key from table.
+            int columnIndex = jTable1.getColumnModel().getColumnIndex(sortBy);
+
+            //create a SortKey for the selected column in selected sort style
+            RowSorter.SortKey sortKey;
+            if (sortStyle.equals("Ascending")) {
+                sortKey = new RowSorter.SortKey(columnIndex, SortOrder.ASCENDING);
+            } else {
+                sortKey = new RowSorter.SortKey(columnIndex, SortOrder.DESCENDING);
+            }
+            sorter.setSortKeys(java.util.Collections.singletonList(sortKey));
+
+            //apply sort to table
+            jTable1.setRowSorter(sorter);
+        } else {
+            System.out.println("No valid selection made.");
+        }
+
+        //hide the dialogue box
+        sortByDialogueBox.setVisible(false);
+    }//GEN-LAST:event_sortByOkButtonActionPerformed
+
+    private void addTaskTextFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addTaskTextFieldFocusGained
+        // TODO add your handling code here:
+        //set text field to blank when focus gained
+        if (addTaskTextField.getText().equals("Task Name...")) {
+            addTaskTextField.setText("");
+        }
+        addTaskTextField.setForeground(Color.BLACK);
+
+    }//GEN-LAST:event_addTaskTextFieldFocusGained
+
+    private void addTaskTextFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_addTaskTextFieldFocusLost
+        // TODO add your handling code here:
+        if (addTaskTextField.getText().isEmpty()) {
+            addTaskTextField.setText("Task Name...");
+            addTaskTextField.setForeground(Color.GRAY);
+        }
+    }//GEN-LAST:event_addTaskTextFieldFocusLost
 
     public void displayTaskManagerGUI() {
         /* Set the Nimbus look and feel */
@@ -376,6 +504,11 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     private javax.swing.JLabel removeAllLabel;
     private javax.swing.JButton removeAllNoOption;
     private javax.swing.JButton removeAllYesOption;
+    private javax.swing.JComboBox<String> sortByComboBoxOption;
+    private javax.swing.JComboBox<String> sortByComboBoxSortStyle;
+    private javax.swing.JDialog sortByDialogueBox;
+    private javax.swing.JLabel sortByJLabel;
+    private javax.swing.JButton sortByOkButton;
     private javax.swing.JComboBox<String> taskTypeComboBox;
     // End of variables declaration//GEN-END:variables
 }

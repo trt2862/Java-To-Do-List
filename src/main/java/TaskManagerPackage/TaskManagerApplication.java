@@ -27,7 +27,7 @@ public class TaskManagerApplication {
         try ( BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
             System.out.println("Enter '?' to see list of commands.");
             System.out.println("Enter 'exit' to end session.");
-            System.out.println("Max Name Length: " + tc.getNameLength());
+            System.out.println("Max Name Length: " + tc.getMaxNameLength());
             String userInput;
             do {
                 System.out.print("> ");
