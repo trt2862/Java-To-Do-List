@@ -138,7 +138,6 @@
             <Property name="text" type="java.lang.String" value="Yes"/>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="removeAllYesOptionMouseClicked"/>
             <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="removeAllYesOptionMousePressed"/>
           </Events>
         </Component>
@@ -508,7 +507,7 @@
                   </Group>
                   <Component id="deleteButton" min="-2" pref="150" max="-2" attributes="0"/>
                   <Component id="AddTaskBtn" min="-2" pref="150" max="-2" attributes="0"/>
-                  <Component id="jButton1" alignment="1" min="-2" pref="150" max="-2" attributes="0"/>
+                  <Component id="undoButton" alignment="1" min="-2" pref="150" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="588" max="32767" attributes="0"/>
@@ -534,7 +533,7 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="markAsCompleteButton" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton1" min="-2" pref="40" max="-2" attributes="0"/>
+                      <Component id="undoButton" min="-2" pref="40" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="22" max="32767" attributes="0"/>
                   </Group>
                   <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
@@ -719,7 +718,7 @@
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="markAsCompleteButtonMouseClicked"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="jButton1">
+    <Component class="javax.swing.JButton" name="undoButton">
       <Properties>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="33" green="33" red="33" type="rgb"/>
@@ -733,7 +732,7 @@
         <Property name="text" type="java.lang.String" value="Undo"/>
       </Properties>
       <Events>
-        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="jButton1MouseClicked"/>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="undoButtonMouseClicked"/>
       </Events>
     </Component>
   </SubComponents>

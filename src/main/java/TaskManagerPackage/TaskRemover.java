@@ -13,19 +13,29 @@ import java.util.Scanner;
  */
 public class TaskRemover {
 
-    private final TaskPrinter tp;
-    private final Validator iv;
-    private final TaskFileManager tfm;
-    private final Scanner scan;
+    private final TaskPrinter tp = new TaskPrinter();
+    private final Validator iv = new InputValidator();
+    private final TaskFileManager tfm = new TaskFileManager();
+    private final Scanner scan = new Scanner(System.in);
     private final DBManager dbm = new DBManager();
 
     public TaskRemover(Printer printer, Validator validator, TaskFileManager taskFileManager) {
-        tp = (TaskPrinter) printer;
-        iv = (InputValidator) validator;
-        tfm = taskFileManager;
-        scan = new Scanner(System.in);
     }
 
+    public TaskRemover() {
+
+    }
+
+    //USED WITH GUI - REMOVES TASK FROM DB
+    protected void removeTaskFromDB(int taskId) {
+        dbm.remove(taskId);
+    }
+
+    protected void removeAllTasksFromDB() {
+        dbm.removeAll();
+    }
+
+    //ALL METHODS BELOW ARE USED WITH CONSOLE.
     private int removeTaskDialogueDB() {
         int taskNumber;
         int totalTasks;
@@ -93,12 +103,14 @@ public class TaskRemover {
         return false;
     }
 
-    protected void removeTaskFromDB() {
+    //USED WITH CONSOLE
+    protected void removeTaskFromConsoleDB() {
         int taskToRemove = removeTaskDialogueDB();
         dbm.remove(taskToRemove);
     }
 
-    protected void removeAllFromDB() {
+    //USED WITH CONSOLE
+    protected void removeAllFromConsoleDB() {
         if (removeAllDialogueDB()) {
             dbm.removeAll();
         }

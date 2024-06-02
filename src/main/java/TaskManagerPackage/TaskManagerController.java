@@ -46,14 +46,14 @@ public class TaskManagerController {
             case "remove a":
             case "remove al":
 //                um.commandPush();
-                tr.removeAllFromDB();
+                tr.removeAllFromConsoleDB();
                 break;
             case "remove task":
             case "remove t":
             case "remove ta":
             case "remove tas":
 //                um.commandPush();
-                tr.removeTaskFromDB();
+                tr.removeTaskFromConsoleDB();
                 break;
             case "create":
             case "c":
@@ -62,7 +62,7 @@ public class TaskManagerController {
             case "crea":
             case "creat":
 //                um.commandPush();
-                tc.createTaskDB();
+                tc.createTaskConsoleDB();
                 break;
             case "?":
                 tp.printCommands();

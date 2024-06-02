@@ -29,6 +29,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
      */
     DBManager dbm = new DBManager();
     TaskCreator tc = new TaskCreator();
+    TaskRemover tr = new TaskRemover();
     UndoManager um = new UndoManager();
 
     public TaskManagerGUI() {
@@ -80,7 +81,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         deleteButton = new javax.swing.JButton();
         updateSelectedButton = new javax.swing.JButton();
         markAsCompleteButton = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
+        undoButton = new javax.swing.JButton();
 
         addTaskDialogueBox.setTitle("Add Task");
         addTaskDialogueBox.setAutoRequestFocus(false);
@@ -148,9 +149,6 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
         removeAllYesOption.setText("Yes");
         removeAllYesOption.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                removeAllYesOptionMouseClicked(evt);
-            }
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 removeAllYesOptionMousePressed(evt);
             }
@@ -493,13 +491,13 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setBackground(new java.awt.Color(51, 51, 51));
-        jButton1.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 255, 255));
-        jButton1.setText("Undo");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+        undoButton.setBackground(new java.awt.Color(51, 51, 51));
+        undoButton.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
+        undoButton.setForeground(new java.awt.Color(255, 255, 255));
+        undoButton.setText("Undo");
+        undoButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
+                undoButtonMouseClicked(evt);
             }
         });
 
@@ -517,7 +515,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                         .addComponent(markAsCompleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(AddTaskBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(undoButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
                 .addGap(18, 18, 18))
@@ -540,7 +538,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(markAsCompleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(undoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 22, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addContainerGap())
@@ -568,10 +566,12 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
     // ADDS TASK TO DATABASE WITH DATA ENTERED BY USER
     private void dialogAddTaskBtnMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_dialogAddTaskBtnMousePressed
-        //creates task and populates task fields with input from dialog fields.
-        Task task;
+        //gets data from dialogue box, feeds to task creator to add task to DB.
+        //variables
         String taskName = addTaskTextField.getText().trim();
         String taskType = (String) taskTypeComboBox.getSelectedItem();
+
+        //error checking
         if (!taskName.isEmpty()
                 && taskName.length() < tc.getMaxNameLength()
                 && taskName.length() >= tc.getMinNameLength()) {
@@ -581,18 +581,17 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             } else if (taskName.length() < tc.getMinNameLength()) {
                 JOptionPane.showMessageDialog(this, "Task Name is too Short! Minimum 1 Character");
             }
-            if ("Home".equals(taskType)) {
-                task = new HomeTask();
-            } else {
-                task = new WorkTask();
-            }
-            task.setTaskName(taskName);
+
             //adds task to DB
+            tc.createTaskDB(taskName, taskType, false);
+
+            //saves DB state to undo manager.
             um.commandPushDB(dbm.getAllTasks());
-            dbm.add(task);
+
             //updates Table in JFrame
             updateJTable();
         } else {
+            //more error checking
             if (taskName.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Task Name Must Contain a Value!");
             } else if (taskName.length() > tc.getMaxNameLength()) {
@@ -607,11 +606,15 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
     // REMOVES ALL TASKS FROM DATABASE
     private void removeAllYesOptionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeAllYesOptionMousePressed
-        //removes all tasks for DB
+        //saves DB state to undo manager
         um.commandPushDB(dbm.getAllTasks());
-        dbm.removeAll();
+
+        //removes all tasks from DB
+        tr.removeAllTasksFromDB();
+
         //updates table in JFrame
         updateJTable();
+
         //sets dialogue box to invisible
         removeAllDialogueBox.setVisible(false);
     }//GEN-LAST:event_removeAllYesOptionMousePressed
@@ -690,11 +693,6 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_deleteButtonMouseClicked
 
-    // REMOVES ALL TASKS FROM DATABASE
-    private void removeAllYesOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeAllYesOptionMouseClicked
-        dbm.removeAll();
-    }//GEN-LAST:event_removeAllYesOptionMouseClicked
-
     // CLOSES REMOVE ALL DIALOGUE BOX
     private void removeAllNoOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeAllNoOptionMouseClicked
         //set dialogue box to invisible
@@ -712,18 +710,21 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     private void removeSelectedYesOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeSelectedYesOptionMouseClicked
         //get indexs of selected rows.
         int[] rows = jTable1.getSelectedRows();
-        //iterate through each index
+
+        //saves DB state to undo manager
         um.commandPushDB(dbm.getAllTasks());
+
+        //iterate through each index
         for (int a : rows) {
             //get task id from row
             int taskID = Integer.parseInt(jTable1.getValueAt(a, 0).toString());
             //remove task using primary key of task id.
-            dbm.remove(taskID);
+            tr.removeTaskFromDB(taskID);
         }
         //update table
         updateJTable();
-        //set dialogue box to invisible
 
+        //set dialogue box to invisible
         removeSelectedDialogueBox.setVisible(false);
     }//GEN-LAST:event_removeSelectedYesOptionMouseClicked
 
@@ -801,19 +802,21 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
     // CLOSES MARK AS COMPLETE DIALOGUE BOX
     private void markAsCompleteNoOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_markAsCompleteNoOptionMouseClicked
-        // TODO add your handling code here:
         markAsCompleteDialogueBox.setVisible(false);
     }//GEN-LAST:event_markAsCompleteNoOptionMouseClicked
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        // TODO add your handling code here:
+    // UNDO LAST OPERATION
+    private void undoButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_undoButtonMouseClicked
+
+        //gets a list of maps from the undo manager. each map represents a row, with the columns as the keys.
         List<Map<String, Object>> resultSetListMap = um.commandPopDB();
         if (resultSetListMap != null) {
+            //updates the JTable with new values.
             updateJTable(resultSetListMap);
         } else {
             JOptionPane.showMessageDialog(this, "Error. Nothing to Undo");
         }
-    }//GEN-LAST:event_jButton1MouseClicked
+    }//GEN-LAST:event_undoButtonMouseClicked
 
     public void displayTaskManagerGUI() {
         /* Set the Nimbus look and feel */
@@ -891,35 +894,21 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         }
     }
 
+    // UPDATES JTABLE WITH NEW VALUES FROM A LIST OF MAPS - SEE UNDOMANAGER CLASS FOR DETAILS
     private void updateJTable(List<Map<String, Object>> resultSetListMap) {
-        //get table model from JTable1
-//        DefaultTableModel tableMdl = (DefaultTableModel) jTable1.getModel();
-        //delete all current instances in the table model
-        //(otherwise duplicate rows are created after every update.)
-//        tableMdl.setRowCount(0);
-        // Loop through the list of maps and add rows to the table model
+        //removes all tasks from the DB
         dbm.removeAll();
+        //iterates over a List of Maps. - Each map contains the column as the key, and the contents as the value.
+        //creates a new task for each map.
         for (Map<String, Object> rowMap : resultSetListMap) {
-            Task task;
-            String id = String.valueOf(rowMap.get("TASKID"));
-            String name = (String) rowMap.get("TASKNAME");
-            String complete = (String) rowMap.get("COMPLETE");
+            String name = (String) rowMap.get("TASKNAME"); //key == taskname, value == name of task. etc
+            String status = (String) rowMap.get("COMPLETE");
+            boolean completed;
+            completed = status.equalsIgnoreCase("Y");
             String type = (String) rowMap.get("TASKTYPE");
-            if (type.equals("Home")) {
-                task = new HomeTask();
-            } else {
-                task = new WorkTask();
-            }
-            if (complete.equals("Y")) {
-                task.setCompleted(true);
-            }
-            task.setTaskName(name);
-            dbm.add(task);
-            // Put values in array
-//            String dbData[] = {id, name, complete, type};
-            // Add array to table model
-//            tableMdl.addRow(dbData);
+            tc.createTaskDB(name, type, completed); //adds each task to the database
         }
+        //finally updates the JTable with new values.
         updateJTable();
     }
 
@@ -930,7 +919,6 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     private javax.swing.JTextField addTaskTextField;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton dialogAddTaskBtn;
-    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton markAsCompleteButton;
@@ -953,6 +941,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     private javax.swing.JLabel sortByJLabel;
     private javax.swing.JButton sortByOkButton;
     private javax.swing.JComboBox<String> taskTypeComboBox;
+    private javax.swing.JButton undoButton;
     private javax.swing.JButton updateSelectedButton;
     private javax.swing.JDialog updateSelectedDialogueBox;
     private javax.swing.JButton updateSelectedOkButton;

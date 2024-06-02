@@ -33,7 +33,18 @@ public class TaskCreator extends JFrame {
         return MIN_TASK_NAME_LENGTH;
     }
 
-    protected void createTaskDB() {
+    protected void createTaskDB(String taskName, String taskType, boolean completed) {
+        if (taskType.equals("Home")) {
+            task = new HomeTask();
+        } else {
+            task = new WorkTask();
+        }
+        task.setCompleted(completed);
+        task.setTaskName(taskName);
+        dbm.add(task);
+    }
+
+    protected void createTaskConsoleDB() {
         Scanner scan = new Scanner(System.in);
         //prompt user for task name
         System.out.println("Task Name? ");
