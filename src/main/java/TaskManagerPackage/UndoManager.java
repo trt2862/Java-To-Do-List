@@ -53,6 +53,7 @@ public class UndoManager {
         return tasksDBHistory.pop();
     }
 
+    //BUG - DOESNT UPDATE COMPLETED STATUS CORRECTLY. CANT BE F*CKED FIXING IT RN
     //CONVERTS A RESULT SET TO A LIST OF MAPS FOR PROCESSING
     public List<Map<String, Object>> resultSetToList(ResultSet rs) {
         //create a new list of maps
