@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -27,10 +29,11 @@ public class TaskManagerGUI extends javax.swing.JFrame {
      */
     DBManager dbm = new DBManager();
     TaskCreator tc = new TaskCreator();
+    UndoManager um = new UndoManager();
 
     public TaskManagerGUI() {
         initComponents();
-        populateJTable();
+        updateJTable();
     }
 
     /**
@@ -76,10 +79,10 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         removeAllTasksBtn = new javax.swing.JButton();
         deleteButton = new javax.swing.JButton();
         updateSelectedButton = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
         markAsCompleteButton = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
+        addTaskDialogueBox.setTitle("Add Task");
         addTaskDialogueBox.setAutoRequestFocus(false);
         addTaskDialogueBox.setMinimumSize(new java.awt.Dimension(300, 150));
 
@@ -131,6 +134,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        removeAllDialogueBox.setTitle("Remove All");
         removeAllDialogueBox.setMinimumSize(new java.awt.Dimension(345, 110));
 
         removeAllLabel.setText("Are you sure you want to remove all tasks?");
@@ -179,6 +183,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        sortByDialogueBox.setTitle("Sort by");
         sortByDialogueBox.setMinimumSize(new java.awt.Dimension(250, 200));
 
         sortByComboBoxOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Task ID", "Task Name", "Complete", "Type" }));
@@ -224,6 +229,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addContainerGap(24, Short.MAX_VALUE))
         );
 
+        removeSelectedDialogueBox.setTitle("Remove Selected");
         removeSelectedDialogueBox.setMinimumSize(new java.awt.Dimension(345, 110));
 
         removeSelectedLabel.setText("Are you sure you want to remove selected tasks?");
@@ -269,6 +275,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        updateSelectedDialogueBox.setTitle("Update Selected");
         updateSelectedDialogueBox.setMinimumSize(new java.awt.Dimension(250, 200));
 
         updateTaskNameLabel.setText("Name");
@@ -298,7 +305,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                             .addGroup(updateSelectedDialogueBoxLayout.createSequentialGroup()
                                 .addComponent(updateTaskNameLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(updateTaskNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(updateTaskNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(updateSelectedDialogueBoxLayout.createSequentialGroup()
                                 .addComponent(updateTaskTypeLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -324,6 +331,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 .addContainerGap(200, Short.MAX_VALUE))
         );
 
+        markAsCompleteDialogueBox.setTitle("Mark as Complete");
         markAsCompleteDialogueBox.setAlwaysOnTop(true);
         markAsCompleteDialogueBox.setMinimumSize(new java.awt.Dimension(200, 150));
 
@@ -371,8 +379,20 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Task Manager");
+        setBackground(new java.awt.Color(255, 255, 252));
+        setFont(new java.awt.Font("Microsoft JhengHei UI Light", 0, 14)); // NOI18N
+        setForeground(java.awt.Color.white);
+        setLocationByPlatform(true);
+        setMinimumSize(new java.awt.Dimension(768, 350));
+        setSize(new java.awt.Dimension(768, 350));
+
+        jScrollPane1.setBackground(new java.awt.Color(51, 51, 51));
 
         jTable1.setAutoCreateRowSorter(true);
+        jTable1.setBackground(new java.awt.Color(102, 102, 102));
+        jTable1.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
+        jTable1.setForeground(new java.awt.Color(255, 255, 255));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -384,13 +404,38 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
-        });
-        jScrollPane1.setViewportView(jTable1);
 
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jTable1.setFillsViewportHeight(true);
+        jTable1.setGridColor(new java.awt.Color(51, 51, 51));
+        jTable1.setName(""); // NOI18N
+        jTable1.setOpaque(false);
+        jTable1.setRowHeight(25);
+        jTable1.setShowGrid(true);
+        jTable1.setShowVerticalLines(false);
+        jScrollPane1.setViewportView(jTable1);
+        if (jTable1.getColumnModel().getColumnCount() > 0) {
+            jTable1.getColumnModel().getColumn(0).setResizable(false);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
+            jTable1.getColumnModel().getColumn(1).setResizable(false);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
+            jTable1.getColumnModel().getColumn(2).setResizable(false);
+            jTable1.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        AddTaskBtn.setBackground(new java.awt.Color(0, 0, 0));
+        AddTaskBtn.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
+        AddTaskBtn.setForeground(new java.awt.Color(255, 255, 255));
         AddTaskBtn.setText("Add New Task");
         AddTaskBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -398,6 +443,9 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             }
         });
 
+        SortByBtn.setBackground(new java.awt.Color(51, 51, 51));
+        SortByBtn.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
+        SortByBtn.setForeground(new java.awt.Color(255, 255, 255));
         SortByBtn.setText("Sort Tasks");
         SortByBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -405,6 +453,9 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             }
         });
 
+        removeAllTasksBtn.setBackground(new java.awt.Color(51, 51, 51));
+        removeAllTasksBtn.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
+        removeAllTasksBtn.setForeground(new java.awt.Color(255, 255, 255));
         removeAllTasksBtn.setText("Remove All Tasks");
         removeAllTasksBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -412,6 +463,9 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             }
         });
 
+        deleteButton.setBackground(new java.awt.Color(51, 51, 51));
+        deleteButton.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
+        deleteButton.setForeground(new java.awt.Color(255, 255, 255));
         deleteButton.setText("Remove Selected");
         deleteButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -419,6 +473,9 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             }
         });
 
+        updateSelectedButton.setBackground(new java.awt.Color(51, 51, 51));
+        updateSelectedButton.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
+        updateSelectedButton.setForeground(new java.awt.Color(255, 255, 255));
         updateSelectedButton.setText("Update Selected");
         updateSelectedButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -426,17 +483,23 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             }
         });
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "TO DO", "undo button", "Refactor code across classes", "-- Could create stack of ResultSets for undo button?", "-- after every operation save the values of the jTable", "-- into a resultset or something similar", "-- when undo button is pressed, take the result set from the ", "-- top of the stack and use that to re-populate the jTable." };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane2.setViewportView(jList1);
-
+        markAsCompleteButton.setBackground(new java.awt.Color(51, 51, 51));
+        markAsCompleteButton.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
+        markAsCompleteButton.setForeground(new java.awt.Color(255, 255, 255));
         markAsCompleteButton.setText("Mark as Complete");
         markAsCompleteButton.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 markAsCompleteButtonMouseClicked(evt);
+            }
+        });
+
+        jButton1.setBackground(new java.awt.Color(51, 51, 51));
+        jButton1.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Undo");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
             }
         });
 
@@ -447,27 +510,23 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(removeAllTasksBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(SortByBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(updateSelectedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(markAsCompleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(AddTaskBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(removeAllTasksBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(SortByBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(updateSelectedButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(markAsCompleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(deleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(AddTaskBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 588, Short.MAX_VALUE)
+                .addGap(18, 18, 18))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(46, 46, 46)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(AddTaskBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -479,11 +538,12 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(updateSelectedButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(markAsCompleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(markAsCompleteButton, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 22, Short.MAX_VALUE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -528,9 +588,10 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             }
             task.setTaskName(taskName);
             //adds task to DB
+            um.commandPushDB(dbm.getAllTasks());
             dbm.add(task);
             //updates Table in JFrame
-            populateJTable();
+            updateJTable();
         } else {
             if (taskName.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Task Name Must Contain a Value!");
@@ -547,9 +608,10 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     // REMOVES ALL TASKS FROM DATABASE
     private void removeAllYesOptionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeAllYesOptionMousePressed
         //removes all tasks for DB
+        um.commandPushDB(dbm.getAllTasks());
         dbm.removeAll();
         //updates table in JFrame
-        populateJTable();
+        updateJTable();
         //sets dialogue box to invisible
         removeAllDialogueBox.setVisible(false);
     }//GEN-LAST:event_removeAllYesOptionMousePressed
@@ -651,6 +713,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         //get indexs of selected rows.
         int[] rows = jTable1.getSelectedRows();
         //iterate through each index
+        um.commandPushDB(dbm.getAllTasks());
         for (int a : rows) {
             //get task id from row
             int taskID = Integer.parseInt(jTable1.getValueAt(a, 0).toString());
@@ -658,7 +721,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             dbm.remove(taskID);
         }
         //update table
-        populateJTable();
+        updateJTable();
         //set dialogue box to invisible
 
         removeSelectedDialogueBox.setVisible(false);
@@ -687,7 +750,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         //get row data
         int row = jTable1.getSelectedRow();
         int taskID = Integer.parseInt(jTable1.getValueAt(row, 0).toString());
-
+        um.commandPushDB(dbm.getAllTasks());
         //get data from dialogue box
         String newTaskName = (String) updateTaskNameTextField.getText();
         String newTaskType = (String) updateTaskTypeComboBox.getSelectedItem();
@@ -697,7 +760,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         dbm.update(taskID, "TaskName", newTaskName);
 
         //update JTable.
-        populateJTable();
+        updateJTable();
 
         //close dialogue box.
         updateSelectedDialogueBox.setVisible(false);
@@ -719,6 +782,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         //get indexs of selected rows.
         int[] rows = jTable1.getSelectedRows();
         //iterate through each index
+        um.commandPushDB(dbm.getAllTasks());
         for (int a : rows) {
             //get task id from row
             int taskID = Integer.parseInt(jTable1.getValueAt(a, 0).toString());
@@ -730,7 +794,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             }
         }
         //update table
-        populateJTable();
+        updateJTable();
         //set dialogue box to invisible
         markAsCompleteDialogueBox.setVisible(false);
     }//GEN-LAST:event_markAsCompleteYesOptionMouseClicked
@@ -740,6 +804,16 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         markAsCompleteDialogueBox.setVisible(false);
     }//GEN-LAST:event_markAsCompleteNoOptionMouseClicked
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        List<Map<String, Object>> resultSetListMap = um.commandPopDB();
+        if (resultSetListMap != null) {
+            updateJTable(resultSetListMap);
+        } else {
+            JOptionPane.showMessageDialog(this, "Error. Nothing to Undo");
+        }
+    }//GEN-LAST:event_jButton1MouseClicked
 
     public void displayTaskManagerGUI() {
         /* Set the Nimbus look and feel */
@@ -752,16 +826,24 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TaskManagerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TaskManagerGUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TaskManagerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TaskManagerGUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TaskManagerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TaskManagerGUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TaskManagerGUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(TaskManagerGUI.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -774,10 +856,9 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     }
 
     // UPDATES JTABLE FOR GUI
-    private void populateJTable() {
-        //create connection, statement and resultset
-        Connection connection = dbm.openConnection();
-        Statement stmt = dbm.openStatement(connection);
+    private void updateJTable() {
+        //create resultset
+
         ResultSet rs = dbm.getAllTasks();
 
         //get table model from JTable1
@@ -799,15 +880,47 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                 String dbData[] = {id, name, complete, type};
                 //add array to table model
                 tableMdl.addRow(dbData);
+
             }
         } catch (SQLException ex) {
-            Logger.getLogger(TaskManagerGUI.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TaskManagerGUI.class
+                    .getName()).log(Level.SEVERE, null, ex);
         } finally {
             //close resources
-            dbm.closeConnection(connection);
             dbm.closeResultSet(rs);
-            dbm.closeStatement(stmt);
         }
+    }
+
+    private void updateJTable(List<Map<String, Object>> resultSetListMap) {
+        //get table model from JTable1
+//        DefaultTableModel tableMdl = (DefaultTableModel) jTable1.getModel();
+        //delete all current instances in the table model
+        //(otherwise duplicate rows are created after every update.)
+//        tableMdl.setRowCount(0);
+        // Loop through the list of maps and add rows to the table model
+        dbm.removeAll();
+        for (Map<String, Object> rowMap : resultSetListMap) {
+            Task task;
+            String id = String.valueOf(rowMap.get("TASKID"));
+            String name = (String) rowMap.get("TASKNAME");
+            String complete = (String) rowMap.get("COMPLETE");
+            String type = (String) rowMap.get("TASKTYPE");
+            if (type.equals("Home")) {
+                task = new HomeTask();
+            } else {
+                task = new WorkTask();
+            }
+            if (complete.equals("Y")) {
+                task.setCompleted(true);
+            }
+            task.setTaskName(name);
+            dbm.add(task);
+            // Put values in array
+//            String dbData[] = {id, name, complete, type};
+            // Add array to table model
+//            tableMdl.addRow(dbData);
+        }
+        updateJTable();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -817,9 +930,8 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     private javax.swing.JTextField addTaskTextField;
     private javax.swing.JButton deleteButton;
     private javax.swing.JButton dialogAddTaskBtn;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     private javax.swing.JButton markAsCompleteButton;
     private javax.swing.JCheckBox markAsCompleteCheckBox;

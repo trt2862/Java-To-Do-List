@@ -4,9 +4,17 @@
  */
 package TaskManagerPackage;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,11 +26,14 @@ public class UndoManager {
     //Using Deque incase a 'Redo' Function is implemented, as can be removed
     //from both ends of the queue.
     private final Deque<String> tasksFileHistory;
+    private final Deque<List<Map<String, Object>>> tasksDBHistory;
     private String tasksFileContent;
     TaskFileManager tfm = new TaskFileManager();
+    DBManager dbm = new DBManager();
 
     public UndoManager() {
         tasksFileHistory = new ArrayDeque();
+        tasksDBHistory = new ArrayDeque();
         tasksFileContent = "";
     }
 
@@ -42,6 +53,40 @@ public class UndoManager {
             tasksFileHistory.push(tasksFileContent);
         }
         return true;
+    }
+
+    public boolean commandPushDB(ResultSet set) {
+//        ResultSet set = dbm.getAllTasks();
+        tasksDBHistory.push(resultSetToList(set));
+        System.out.println("Added DB Information to Deque");
+        return true;
+    }
+
+    public List<Map<String, Object>> commandPopDB() {
+        if (tasksDBHistory.peek() == null) {
+            return null;
+        }
+        return tasksDBHistory.pop();
+    }
+
+    public List<Map<String, Object>> resultSetToList(ResultSet rs) {
+        List<Map<String, Object>> resultSetList = new ArrayList<>();
+        try {
+
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            while (rs.next()) {
+                Map<String, Object> rowMap = new HashMap<>();
+                for (int i = 1; i <= columnCount; i++) {
+                    rowMap.put(metaData.getColumnName(i), rs.getObject(i));
+                }
+                resultSetList.add(rowMap);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(UndoManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return resultSetList;
     }
 
     public boolean commandPop() {
