@@ -170,7 +170,7 @@ public class DBManager {
             connection.setAutoCommit(false);
             Savepoint savepoint = connection.setSavepoint(saveMessage);
 
-            char complete = 'n';
+            char complete = 'N';
             String SQL = "INSERT INTO TASKS (TaskName, DateCreated, Complete, TaskType) VALUES ("
                     + "'" + task.getTaskName() + "', "
                     + "'" + task.getDateCreated() + "', "
