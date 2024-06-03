@@ -42,19 +42,19 @@ public class TaskPrinter implements Printer {
     }
 
     private void printTaskFromDB(int taskId) {
-        ResultSet set = dbm.getTask(taskId);
+        ResultSet set = dbm.repo.getElement(taskId);
         try {
             formatTasks(set);
         } catch (SQLException ex) {
             Logger.getLogger(TaskPrinter.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            dbm.closeResultSet(set);
+            dbm.connManager.closeResultSet(set);
         }
     }
 
     @Override
     public void printTaskFromDB() {
-        if (dbm.isEmpty()) {
+        if (dbm.repo.isEmpty()) {
             System.out.println("No Tasks to Display!"); // checks if tasks.txt is empty, by checking if first line is null.
             return;
         }
@@ -63,7 +63,7 @@ public class TaskPrinter implements Printer {
         String userInput = scan.nextLine().trim();
 //        userInput = iv.validateTaskExists(userInput, tfm.readTasks().size());
 
-        while (!iv.validateNumber(userInput) || Integer.parseInt(userInput) < 1 || !dbm.exists(Integer.parseInt(userInput))) {
+        while (!iv.validateNumber(userInput) || Integer.parseInt(userInput) < 1 || !dbm.repo.exists(Integer.parseInt(userInput))) {
             if (userInput.equalsIgnoreCase("exit")) {
                 return;
             }
@@ -72,7 +72,7 @@ public class TaskPrinter implements Printer {
             userInput = scan.nextLine().trim();
         }
         int taskId = Integer.parseInt(userInput);
-        if (!dbm.exists(taskId)) {
+        if (!dbm.repo.exists(taskId)) {
             System.out.println("Task Not Found! Double Check Task Exists or Check Task Number.");
             return;
         }
@@ -82,13 +82,13 @@ public class TaskPrinter implements Printer {
     @Override
     public int printAllTasksFromDB() {
         int rowCount = 0;
-        ResultSet resultSet = dbm.getAllTasks();
+        ResultSet resultSet = dbm.repo.getAllElements();
         try {
             rowCount = formatTasks(resultSet);
         } catch (SQLException ex) {
             Logger.getLogger(TaskPrinter.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
-            dbm.closeResultSet(resultSet);
+            dbm.connManager.closeResultSet(resultSet);
         }
         return rowCount;
     }

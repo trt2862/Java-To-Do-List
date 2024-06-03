@@ -26,7 +26,7 @@ public class TaskUpdater {
 
     protected void updateCompleteStatusDB() {
         Scanner scanKbd = new Scanner(System.in);
-        if (dbm.isEmpty()) {
+        if (dbm.repo.isEmpty()) {
             System.out.println("No Tasks to Update!"); // checks if tasks.txt is empty, by checking if first line is null.
             return;
         }
@@ -43,7 +43,7 @@ public class TaskUpdater {
         }
         int taskId = Integer.parseInt(userInput);
         //validates tasks exists
-        if (dbm.exists(taskId)) {
+        if (dbm.repo.exists(taskId)) {
             boolean invalid = true;
             while (invalid) {
                 System.out.println("What option do you want to update?");
@@ -54,7 +54,7 @@ public class TaskUpdater {
                     case "nam":
                     case "na":
                     case "n":
-                        dbm.update(taskId, "TASKNAME", getNewName());
+                        dbm.repo.update(taskId, "TASKNAME", getNewName());
                         System.out.println("Updating Name");
                         invalid = false;
                         break;
@@ -68,7 +68,7 @@ public class TaskUpdater {
                         if (status == ' ') {
                             break;
                         }
-                        dbm.update(taskId, "COMPLETE", status);
+                        dbm.repo.update(taskId, "COMPLETE", status);
                         System.out.println("Updating Status");
                         invalid = false;
                         break;
@@ -78,7 +78,7 @@ public class TaskUpdater {
                     case "t":
                         String type = getNewType();
                         if (type != null) {
-                            dbm.update(taskId, "TASKTYPE", type);
+                            dbm.repo.update(taskId, "TASKTYPE", type);
                             System.out.println("Updating Type");
                             invalid = false;
                             break;

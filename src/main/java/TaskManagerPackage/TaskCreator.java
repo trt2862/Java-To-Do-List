@@ -4,7 +4,6 @@
  */
 package TaskManagerPackage;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 import javax.swing.*;
 
@@ -33,7 +32,7 @@ public class TaskCreator extends JFrame {
         return MIN_TASK_NAME_LENGTH;
     }
 
-    protected boolean createTaskDB(String taskName, String taskType, boolean completed) {
+    public boolean createTaskDB(String taskName, String taskType, boolean completed) {
         switch (taskType) {
             case "Home":
                 task = new HomeTask();
@@ -46,7 +45,7 @@ public class TaskCreator extends JFrame {
         }
         task.setCompleted(completed);
         task.setTaskName(taskName);
-        dbm.add(task);
+        dbm.repo.add(task);
         return true;
     }
 
@@ -96,7 +95,7 @@ public class TaskCreator extends JFrame {
                 task = new WorkTask();
             }
             task.setTaskName(taskName);
-            dbm.add(task);
+            dbm.repo.add(task);
             return true;
         }
         return false;

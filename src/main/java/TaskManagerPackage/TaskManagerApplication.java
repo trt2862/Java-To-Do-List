@@ -18,9 +18,11 @@ import java.io.InputStreamReader;
 public class TaskManagerApplication {
 
     public static void main(String[] args) {
-
+        DBManager dbm;
         TaskCreator tc = new TaskCreator();
         TaskManagerController tmc = new TaskManagerController();
+        dbm = new DBManager();
+        dbm.schema.initialiseDB();
         TaskManagerGUI tmGUI = new TaskManagerGUI();
         tmGUI.displayTaskManagerGUI();
 

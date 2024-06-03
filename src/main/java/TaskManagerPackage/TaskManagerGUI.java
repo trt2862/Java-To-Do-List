@@ -586,7 +586,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             tc.createTaskDB(taskName, taskType, false);
 
             //saves DB state to undo manager.
-            um.commandPushDB(dbm.getAllTasks());
+            um.commandPushDB(dbm.repo.getAllElements());
 
             //updates Table in JFrame
             updateJTable();
@@ -607,7 +607,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     // REMOVES ALL TASKS FROM DATABASE
     private void removeAllYesOptionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeAllYesOptionMousePressed
         //saves DB state to undo manager
-        um.commandPushDB(dbm.getAllTasks());
+        um.commandPushDB(dbm.repo.getAllElements());
 
         //removes all tasks from DB
         tr.removeAllTasksFromDB();
@@ -712,7 +712,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         int[] rows = jTable1.getSelectedRows();
 
         //saves DB state to undo manager
-        um.commandPushDB(dbm.getAllTasks());
+        um.commandPushDB(dbm.repo.getAllElements());
 
         //iterate through each index
         for (int a : rows) {
@@ -751,14 +751,14 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         //get row data
         int row = jTable1.getSelectedRow();
         int taskID = Integer.parseInt(jTable1.getValueAt(row, 0).toString());
-        um.commandPushDB(dbm.getAllTasks());
+        um.commandPushDB(dbm.repo.getAllElements());
         //get data from dialogue box
         String newTaskName = (String) updateTaskNameTextField.getText();
         String newTaskType = (String) updateTaskTypeComboBox.getSelectedItem();
 
         //update database with new values
-        dbm.update(taskID, "TaskType", newTaskType);
-        dbm.update(taskID, "TaskName", newTaskName);
+        dbm.repo.update(taskID, "TaskType", newTaskType);
+        dbm.repo.update(taskID, "TaskName", newTaskName);
 
         //update JTable.
         updateJTable();
@@ -783,15 +783,15 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         //get indexs of selected rows.
         int[] rows = jTable1.getSelectedRows();
         //iterate through each index
-        um.commandPushDB(dbm.getAllTasks());
+        um.commandPushDB(dbm.repo.getAllElements());
         for (int a : rows) {
             //get task id from row
             int taskID = Integer.parseInt(jTable1.getValueAt(a, 0).toString());
             //update task using primary key of task id.
             if (markAsCompleteCheckBox.isSelected()) { // if checkbox enabled, mark as complete, else mark as incomplete.
-                dbm.update(taskID, "Complete", "y");
+                dbm.repo.update(taskID, "Complete", "y");
             } else {
-                dbm.update(taskID, "Complete", "n");
+                dbm.repo.update(taskID, "Complete", "n");
             }
         }
         //update table
@@ -862,7 +862,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     private void updateJTable() {
         //create resultset
 
-        ResultSet rs = dbm.getAllTasks();
+        ResultSet rs = dbm.repo.getAllElements();
 
         //get table model from JTable1
         DefaultTableModel tableMdl = (DefaultTableModel) jTable1.getModel();
@@ -890,14 +890,14 @@ public class TaskManagerGUI extends javax.swing.JFrame {
                     .getName()).log(Level.SEVERE, null, ex);
         } finally {
             //close resources
-            dbm.closeResultSet(rs);
+            dbm.connManager.closeResultSet(rs);
         }
     }
 
     // UPDATES JTABLE WITH NEW VALUES FROM A LIST OF MAPS - SEE UNDOMANAGER CLASS FOR DETAILS
     private void updateJTable(List<Map<String, Object>> resultSetListMap) {
         //removes all tasks from the DB
-        dbm.removeAll();
+        dbm.repo.removeAll();
         //iterates over a List of Maps. - Each map contains the column as the key, and the contents as the value.
         //creates a new task for each map.
         for (Map<String, Object> rowMap : resultSetListMap) {

@@ -12,7 +12,7 @@ import java.text.DateFormat;
  *
  * @author Caleb & miguel
  */
-public class Task {
+public abstract class Task implements Comparable<Task> {
 
     private String taskName;
     private String dateCreated;
@@ -57,6 +57,11 @@ public class Task {
     //check if the task is complete.
     public boolean isCompleted() {
         return completed;
+    }
+
+    @Override
+    public int compareTo(Task o) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }

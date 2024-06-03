@@ -17,12 +17,9 @@ public class TaskManagerController {
     TaskFileManager tfm = new TaskFileManager();
     TaskRemover tr = new TaskRemover(tp, iv, tfm);
     TaskUpdater tu = new TaskUpdater(iv, tp, tfm);
-    DBManager dbm;
+    DBManager dbm = new DBManager();
 
     public TaskManagerController() {
-        //initialises Database when application is started.
-        dbm = new DBManager();
-        dbm.initialiseDB();
     }
 
     public void processCommand(String userInput) {
@@ -45,14 +42,14 @@ public class TaskManagerController {
             case "remove all":
             case "remove a":
             case "remove al":
-//                um.commandPush();
+                um.commandPushDB();
                 tr.removeAllFromConsoleDB();
                 break;
             case "remove task":
             case "remove t":
             case "remove ta":
             case "remove tas":
-//                um.commandPush();
+                um.commandPushDB();
                 tr.removeTaskFromConsoleDB();
                 break;
             case "create":
@@ -61,7 +58,7 @@ public class TaskManagerController {
             case "cre":
             case "crea":
             case "creat":
-//                um.commandPush();
+                um.commandPushDB();
                 tc.createTaskConsoleDB();
                 break;
             case "?":
@@ -78,6 +75,7 @@ public class TaskManagerController {
             case "undo":
             case "und":
             case "un":
+//                um.commandPopDB()
 //                um.commandPop();
 //                dbm.undo();
                 break;

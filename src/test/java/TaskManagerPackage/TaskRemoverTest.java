@@ -36,7 +36,7 @@ public class TaskRemoverTest {
     public void testRemoveAllTasksFromDB() {
         System.out.println("testing removeAllTasksFromDB() from TaskRemover");
         TaskRemover instance = new TaskRemover();
-        if (dbm.isEmpty()) {
+        if (dbm.repo.isEmpty()) {
             assertFalse(instance.removeAllTasksFromDB());
         } else {
             assertTrue(instance.removeAllTasksFromDB());

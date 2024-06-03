@@ -28,18 +28,18 @@ public class TaskRemover {
 
     //USED WITH GUI - REMOVES TASK FROM DB
     protected boolean removeTaskFromDB(int taskId) {
-        return dbm.remove(taskId);
+        return dbm.repo.remove(taskId);
     }
 
     protected boolean removeAllTasksFromDB() {
-        return dbm.removeAll();
+        return dbm.repo.removeAll();
     }
 
     //ALL METHODS BELOW ARE USED WITH CONSOLE.
     private int removeTaskDialogueDB() {
         int taskNumber;
         int totalTasks;
-        if (dbm.isEmpty()) {
+        if (dbm.repo.isEmpty()) {
             System.out.println("No Tasks to Remove!");
         } else {
             totalTasks = tp.printAllTasksFromDB();
@@ -65,7 +65,7 @@ public class TaskRemover {
 
                 taskNumber = Integer.parseInt(userInput);
 
-                if (!dbm.exists(taskNumber)) {
+                if (!dbm.repo.exists(taskNumber)) {
                     System.out.println("Task Not Found! Double Check Task Exists or Check Task Number.");
                     System.out.print("> ");
                     userInput = scan.nextLine().trim();
@@ -106,13 +106,13 @@ public class TaskRemover {
     //USED WITH CONSOLE
     protected void removeTaskFromConsoleDB() {
         int taskToRemove = removeTaskDialogueDB();
-        dbm.remove(taskToRemove);
+        dbm.repo.remove(taskToRemove);
     }
 
     //USED WITH CONSOLE
     protected void removeAllFromConsoleDB() {
         if (removeAllDialogueDB()) {
-            dbm.removeAll();
+            dbm.repo.removeAll();
         }
     }
 

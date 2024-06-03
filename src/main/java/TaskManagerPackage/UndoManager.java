@@ -46,7 +46,7 @@ public class UndoManager {
     }
 
     public boolean commandPushDB() {
-        ResultSet set = dbm.getAllTasks();
+        ResultSet set = dbm.repo.getAllElements();
         commandPushDB(set);
         return true;
     }
@@ -59,7 +59,9 @@ public class UndoManager {
         return tasksDBHistory.pop();
     }
 
-    //BUG - DOESNT UPDATE COMPLETED STATUS CORRECTLY. CANT BE F*CKED FIXING IT RN
+    //BUG - DOESNT UPDATE COMPLETED STATUS CORRECTLY.
+    //BUG - DOESNT UNDO TASK BEING ADDED
+    //CANT BE F*CKED FIXING IT RN
     //CONVERTS A RESULT SET TO A LIST OF MAPS FOR PROCESSING
     public List<Map<String, Object>> resultSetToList(ResultSet rs) {
         //create a new list of maps
