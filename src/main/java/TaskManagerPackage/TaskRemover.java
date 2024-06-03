@@ -27,12 +27,12 @@ public class TaskRemover {
     }
 
     //USED WITH GUI - REMOVES TASK FROM DB
-    protected void removeTaskFromDB(int taskId) {
-        dbm.remove(taskId);
+    protected boolean removeTaskFromDB(int taskId) {
+        return dbm.remove(taskId);
     }
 
-    protected void removeAllTasksFromDB() {
-        dbm.removeAll();
+    protected boolean removeAllTasksFromDB() {
+        return dbm.removeAll();
     }
 
     //ALL METHODS BELOW ARE USED WITH CONSOLE.

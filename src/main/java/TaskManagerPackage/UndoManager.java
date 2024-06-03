@@ -45,6 +45,12 @@ public class UndoManager {
         return true;
     }
 
+    public boolean commandPushDB() {
+        ResultSet set = dbm.getAllTasks();
+        commandPushDB(set);
+        return true;
+    }
+
     //POPS TOP OF DEQUE STACK
     public List<Map<String, Object>> commandPopDB() {
         if (tasksDBHistory.peek() == null) {

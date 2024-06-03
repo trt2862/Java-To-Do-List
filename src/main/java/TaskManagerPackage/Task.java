@@ -49,13 +49,9 @@ public class Task {
         this.completed = completed;
     }
 
-    public String getDate() {
-        return this.getDateCreated();
-    }
-
     //implemented by WorkTask and HomeTask
     public String getType() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.taskType;
     }
 
     //check if the task is complete.

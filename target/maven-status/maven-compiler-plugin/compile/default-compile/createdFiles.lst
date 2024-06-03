@@ -2,10 +2,10 @@ TaskManagerPackage\TaskManagerApplication.class
 TaskManagerPackage\InputValidator.class
 TaskManagerPackage\Task.class
 TaskManagerPackage\WorkTask.class
-TaskManagerPackage\HomeTask.class
 TaskManagerPackage\TaskPrinter.class
-TaskManagerPackage\Validator.class
 TaskManagerPackage\TaskCreator.class
+TaskManagerPackage\HomeTask.class
+TaskManagerPackage\Validator.class
 TaskManagerPackage\UndoManager.class
 TaskManagerPackage\TaskManagerController.class
 TaskManagerPackage\TaskUpdater.class

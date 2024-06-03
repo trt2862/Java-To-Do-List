@@ -188,43 +188,57 @@ public class DBManager {
     }
 
     //removes task from DB using matching taskID
-    public void remove(int taskId) {
+    public boolean remove(int taskId) {
         //remove task from DB..
-        String SQL = "DELETE FROM TASKS WHERE TASKID = ?";
-        Connection connection = openConnection();
-        PreparedStatement stmt = null;
-        try {
-            connection.setAutoCommit(false);
-            stmt = connection.prepareStatement(SQL);
-            stmt.setInt(1, taskId);
-            stmt.executeUpdate();
-            connection.commit();
-        } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            closeStatement(stmt);
-            closeConnection(connection);
-            System.out.println("Task Removed Successfully.");
+        if (exists(taskId)) {
+
+            String SQL = "DELETE FROM TASKS WHERE TASKID = ?";
+            Connection connection = openConnection();
+            PreparedStatement stmt = null;
+            try {
+                connection.setAutoCommit(false);
+                stmt = connection.prepareStatement(SQL);
+                stmt.setInt(1, taskId);
+                stmt.executeUpdate();
+                connection.commit();
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            } finally {
+                closeStatement(stmt);
+                closeConnection(connection);
+                System.out.println("Task Removed Successfully.");
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 
     //removes all tasks from DB
-    public void removeAll() {
+    public boolean removeAll() {
         //remove all tasks from DB.
-        String SQL = "DELETE FROM TASKS";
-        Connection connection = openConnection();
-        PreparedStatement stmt = null;
-        try {
-            connection.setAutoCommit(false); //begin transaction with DB
-            stmt = connection.prepareStatement(SQL);
-            stmt.executeUpdate();
-            connection.commit(); //end transaction with DB
-        } catch (SQLException ex) {
-            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            closeStatement(stmt);
-            closeConnection(connection);
-            System.out.println("All Tasks Removed Successfully.");
+        if (!isEmpty()) {
+
+            String SQL = "DELETE FROM TASKS";
+            Connection connection = openConnection();
+            PreparedStatement stmt = null;
+            try {
+                connection.setAutoCommit(false); //begin transaction with DB
+                stmt = connection.prepareStatement(SQL);
+                stmt.executeUpdate();
+                connection.commit(); //end transaction with DB
+            } catch (SQLException ex) {
+                Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+                return false;
+            } finally {
+                closeStatement(stmt);
+                closeConnection(connection);
+                System.out.println("All Tasks Removed Successfully.");
+            }
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -317,29 +331,6 @@ public class DBManager {
             closeStatement(stmt);
             closeConnection(connection);
         }
-    }
-
-    public void search() {
-        //returns task being searched for.
-    }
-
-    //not sure it will be very easy to implement this with DB
-    //will leave till last. may have to forfeit given time
-    //constrains with assignment.
-    public void undo() {
-//        String SQL = "ROLLBACK TO SAVEPOINT";
-//        Connection connection = openConnection();
-//        PreparedStatement stmt = null;
-//        try {
-//            stmt = connection.prepareStatement(SQL);
-//            stmt.executeUpdate();
-//            //undo previous operation.
-//        } catch (SQLException ex) {
-//            Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
-//        } finally {
-//            closeConnection(connection);
-//            closeStatement(stmt);
-//        }
     }
 
     //gets resultset of task to be parsed for printing

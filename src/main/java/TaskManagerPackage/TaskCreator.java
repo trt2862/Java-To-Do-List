@@ -33,18 +33,24 @@ public class TaskCreator extends JFrame {
         return MIN_TASK_NAME_LENGTH;
     }
 
-    protected void createTaskDB(String taskName, String taskType, boolean completed) {
-        if (taskType.equals("Home")) {
-            task = new HomeTask();
-        } else {
-            task = new WorkTask();
+    protected boolean createTaskDB(String taskName, String taskType, boolean completed) {
+        switch (taskType) {
+            case "Home":
+                task = new HomeTask();
+                break;
+            case "Work":
+                task = new WorkTask();
+                break;
+            default:
+                return false;
         }
         task.setCompleted(completed);
         task.setTaskName(taskName);
         dbm.add(task);
+        return true;
     }
 
-    protected void createTaskConsoleDB() {
+    protected boolean createTaskConsoleDB() {
         Scanner scan = new Scanner(System.in);
         //prompt user for task name
         System.out.println("Task Name? ");
@@ -52,7 +58,7 @@ public class TaskCreator extends JFrame {
         String taskName = scan.nextLine().trim();
         if (taskName.equalsIgnoreCase("exit")) {
             System.out.println("Cancelled");
-            return;
+            return false;
         }
         //check task fits parameters of name. taken to main console with error message if task name doesnt
         //suit requirements. where user can continue to enter commands.
@@ -75,7 +81,7 @@ public class TaskCreator extends JFrame {
             //to enter commands.
             while (!taskType.equalsIgnoreCase("Home") && !taskType.equalsIgnoreCase("Work")) {
                 if (taskType.equalsIgnoreCase("exit")) {
-                    return;
+                    return false;
                 }
                 System.out.println("Error.");
                 System.out.println("Is this task for Home or Work? (Type 'Home' or 'Work'):");
@@ -91,7 +97,9 @@ public class TaskCreator extends JFrame {
             }
             task.setTaskName(taskName);
             dbm.add(task);
+            return true;
         }
+        return false;
     }
 
     //obselete -- updated to work with DB
@@ -198,9 +206,5 @@ public class TaskCreator extends JFrame {
 //            }
 //        }
         return null;
-    }
-
-    void createTaskGUI(JTextField addTaskTextField, JComboBox<String> taskTypeComboBox, TaskManagerGUI aThis) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
