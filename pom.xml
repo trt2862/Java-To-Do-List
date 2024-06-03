@@ -22,5 +22,11 @@
             <artifactId>derbytools</artifactId>
             <version>10.2.2.0</version> <!-- Use the latest version -->
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.1</version>
+            <type>pom.sha512</type>
+        </dependency>
     </dependencies>
 </project>
