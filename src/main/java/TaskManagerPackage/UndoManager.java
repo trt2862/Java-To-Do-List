@@ -38,16 +38,10 @@ public class UndoManager {
     }
 
     //CONVERTS RESULT-SET TO LIST OF MAPS - ADDS TO DEQUE
-    public boolean commandPushDB(ResultSet set) {
-        //adds list of maps to deque
-        tasksDBHistory.push(resultSetToList(set));
-//        System.out.println("Added DB Information to Deque");
-        return true;
-    }
-
     public boolean commandPushDB() {
         ResultSet set = dbm.repo.getAllElements();
-        commandPushDB(set);
+        tasksDBHistory.push(resultSetToList(set));
+
         return true;
     }
 
@@ -59,8 +53,6 @@ public class UndoManager {
         return tasksDBHistory.pop();
     }
 
-    //BUG - DOESNT UPDATE COMPLETED STATUS CORRECTLY.
-    //BUG - DOESNT UNDO TASK BEING ADDED
     //CANT BE F*CKED FIXING IT RN
     //CONVERTS A RESULT SET TO A LIST OF MAPS FOR PROCESSING
     public List<Map<String, Object>> resultSetToList(ResultSet rs) {

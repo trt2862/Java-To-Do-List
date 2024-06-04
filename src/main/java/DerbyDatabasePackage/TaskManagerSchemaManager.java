@@ -13,7 +13,7 @@ import java.sql.Statement;
  *
  * @author Caleb
  */
-//initialises connection to DB
+//SOLE PURPOSE IS TO INITIALISE CONNECTION TO THE DATABASE.
 public class TaskManagerSchemaManager {
 
     TaskManagerConnectionManager connManager = new TaskManagerConnectionManager();

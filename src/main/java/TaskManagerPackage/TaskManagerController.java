@@ -16,7 +16,7 @@ public class TaskManagerController {
     Validator iv = new InputValidator();
     TaskFileManager tfm = new TaskFileManager();
     TaskRemover tr = new TaskRemover(tp, iv, tfm);
-    TaskUpdater tu = new TaskUpdater(iv, tp, tfm);
+    TaskUpdater tu = new TaskUpdater();
     DBManager dbm = new DBManager();
 
     public TaskManagerController() {

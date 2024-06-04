@@ -31,6 +31,8 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     TaskCreator tc = new TaskCreator();
     TaskRemover tr = new TaskRemover();
     UndoManager um = new UndoManager();
+    Validator iv = new InputValidator();
+    TaskUpdater tu = new TaskUpdater();
 
     public TaskManagerGUI() {
         initComponents();
@@ -570,44 +572,41 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         //variables
         String taskName = addTaskTextField.getText().trim();
         String taskType = (String) taskTypeComboBox.getSelectedItem();
-
-        //error checking
-        if (!taskName.isEmpty()
-                && taskName.length() < tc.getMaxNameLength()
-                && taskName.length() >= tc.getMinNameLength()) {
-
-            if (taskName.length() > tc.getMaxNameLength()) {
-                JOptionPane.showMessageDialog(this, "Task Name is too Long! Maximum 32 Characters");
-            } else if (taskName.length() < tc.getMinNameLength()) {
-                JOptionPane.showMessageDialog(this, "Task Name is too Short! Minimum 1 Character");
-            }
-
-            //adds task to DB
-            tc.createTaskDB(taskName, taskType, false);
-
-            //saves DB state to undo manager.
-            um.commandPushDB(dbm.repo.getAllElements());
-
-            //updates Table in JFrame
-            updateJTable();
-        } else {
-            //more error checking
-            if (taskName.isEmpty()) {
+        int validTask = iv.validateTaskName(taskName, tc.getMaxNameLength(), tc.getMinNameLength());
+        //-1 == name is empty
+        //0 == name is too short
+        //1 == name is too long
+        //2 == name is ok
+        switch (validTask) {
+            case -1:
                 JOptionPane.showMessageDialog(this, "Task Name Must Contain a Value!");
-            } else if (taskName.length() > tc.getMaxNameLength()) {
-                JOptionPane.showMessageDialog(this, "Task Name is too Long! Maximum 32 Characters");
-            } else if (taskName.length() < tc.getMinNameLength()) {
+                break;
+            case 0:
                 JOptionPane.showMessageDialog(this, "Task Name is too Short! Minimum 1 Character");
-            }
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(this, "Task Name is too Long! Maximum 32 Characters");
+                break;
+            case 2:
+                //saves DB state to undo manager.
+                um.commandPushDB();
+
+                //adds task to DB
+                tc.createTaskDB(taskName, taskType, false);
+
+                //updates Table in JFrame
+                updateJTable();
+
+                addTaskDialogueBox.setVisible(false);
+                break;
         }
-        //sets dialogue box to invisible
         addTaskDialogueBox.setVisible(false);
     }//GEN-LAST:event_dialogAddTaskBtnMousePressed
 
     // REMOVES ALL TASKS FROM DATABASE
     private void removeAllYesOptionMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeAllYesOptionMousePressed
         //saves DB state to undo manager
-        um.commandPushDB(dbm.repo.getAllElements());
+        um.commandPushDB();
 
         //removes all tasks from DB
         tr.removeAllTasksFromDB();
@@ -712,7 +711,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         int[] rows = jTable1.getSelectedRows();
 
         //saves DB state to undo manager
-        um.commandPushDB(dbm.repo.getAllElements());
+        um.commandPushDB();
 
         //iterate through each index
         for (int a : rows) {
@@ -749,20 +748,41 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     // UPDATES 'TASKTYPE' AND 'TASKNAME' IN SELECTED ROW WITH NEW VALUES.
     private void updateSelectedOkButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateSelectedOkButtonMouseClicked
         //get row data
+        //SHOULD BE USING TASK UPDATER!
         int row = jTable1.getSelectedRow();
         int taskID = Integer.parseInt(jTable1.getValueAt(row, 0).toString());
-        um.commandPushDB(dbm.repo.getAllElements());
         //get data from dialogue box
+
+        //validate new task name
         String newTaskName = (String) updateTaskNameTextField.getText();
-        String newTaskType = (String) updateTaskTypeComboBox.getSelectedItem();
+        int validTask = iv.validateTaskName(newTaskName, tc.getMaxNameLength(), tc.getMinNameLength());
+        //-1 == name is empty
+        //0 == name is too short
+        //1 == name is too long
+        //2 == name is ok
+        switch (validTask) {
+            case -1:
+                JOptionPane.showMessageDialog(this, "Task Name Must Contain a Value!");
+                break;
+            case 0:
+                JOptionPane.showMessageDialog(this, "Task Name is too Short! Minimum 1 Character");
+                break;
+            case 1:
+                JOptionPane.showMessageDialog(this, "Task Name is too Long! Maximum 32 Characters");
+                break;
+            case 2:
+                //adds task to DB
+                String newTaskType = (String) updateTaskTypeComboBox.getSelectedItem();
 
-        //update database with new values
-        dbm.repo.update(taskID, "TaskType", newTaskType);
-        dbm.repo.update(taskID, "TaskName", newTaskName);
+                //saves DB state to undo manager.
+                um.commandPushDB();
+                tu.updateTaskDetailsDB(taskID, "TaskType", newTaskType);
+                tu.updateTaskDetailsDB(taskID, "TaskName", newTaskName);
 
-        //update JTable.
-        updateJTable();
-
+                //updates Table in JFrame
+                updateJTable();
+                break;
+        }
         //close dialogue box.
         updateSelectedDialogueBox.setVisible(false);
     }//GEN-LAST:event_updateSelectedOkButtonMouseClicked
@@ -783,7 +803,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         //get indexs of selected rows.
         int[] rows = jTable1.getSelectedRows();
         //iterate through each index
-        um.commandPushDB(dbm.repo.getAllElements());
+        um.commandPushDB();
         for (int a : rows) {
             //get task id from row
             int taskID = Integer.parseInt(jTable1.getValueAt(a, 0).toString());

@@ -12,18 +12,25 @@ import java.sql.*;
  */
 public interface ConnectionManager {
 
+    //CHECKS CONNECTION TO DATABASE
     public boolean checkConnection(Connection conn);
 
+    //OPENS A CONNECTION TO A DATABASE
     public Connection openConnection();
 
+    //CREATES A STATEMENT
     public Statement openStatement(Connection conn);
 
+    //CLOSES RESOURCES OF A CONNECTION
     public void closeConnection(Connection conn);
 
+    //CLOSES RESOURCES OF A STATEMENT (STATEMENT)
     public void closeStatement(Statement stmt);
 
+    //CLOSES RESOURCES OF A STATEMENT (PREPAREDSTATEMENT)
     public void closeStatement(PreparedStatement stmt);
 
+    //CLOSES RESOURCES OF A RESULTSET
     public void closeResultSet(ResultSet rs);
 
 }

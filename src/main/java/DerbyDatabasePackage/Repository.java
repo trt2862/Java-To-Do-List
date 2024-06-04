@@ -15,22 +15,37 @@ import java.util.Map;
  */
 public interface Repository<E extends Comparable<E>> {
 
-    public void add(E element);
+    //ADDS ELEMENT TO DATABASE
+    public abstract void add(E element);
 
-    public boolean remove(int primaryKey);
+    //REMOVES ELEMENT FROM DATABASE GIVEN THE PRIMARY KEY
+    public abstract boolean remove(int primaryKey);
 
-    public boolean removeAll();
+    //REMOVES ALL ELEMENTS FROM THE DATABASE
+    public abstract boolean removeAll();
 
-    public boolean isEmpty();
+    //CHECKS IF THE DATABASE IS EMPTY
+    public abstract boolean isEmpty();
 
-    public <E> void update(int primaryKey, String columnName, E value);
+    //UPDATES THE DATABASE GIVEN THE PRIMARYKEY, COLUMNNAME AND VALUE
+    public abstract <E> void update(int primaryKey, String columnName, E value);
 
-    public boolean exists(int primaryKey);
+    //CHECKS IF AN ELEMENT GIVEN A PRIMARY KEY, EXISTS IN THE DATABASE
+    public abstract boolean exists(int primaryKey);
 
-    public ResultSet getElement(int primaryKey);
+    //RETRIEVE THE RESULTSET OF AN ELEMENT FROM A DATABASE GIVEN THE PRIMARYKEY
+    public abstract ResultSet getElement(int primaryKey);
 
-    public ResultSet getAllElements();
+    //RETRIEVE THE RESULTSET OF ALL ELEMENTS FROM THE DATABASE
+    public abstract ResultSet getAllElements();
 
-    public void undo(List<Map<String, Object>> resultSetListMap);
+    //GIVEN A LIST OF MAPS, DELETE ALL THE ELEMENTS OF THE DATABASE AND REBUILD
+    //THE DATABASE WITH THE LIST OF MAPS.
+    //(VERY INEFFICIENT, RESEARCHED USING DELTAS INSTEAD, SO THAT COULD BE A POTENTIAL UPGRADE.)
+    //
+    //WHERE
+    //A MAP REPRESENTS A ROW IN A TABLE WHERE THE KEY = COLUMN NAME, VALUE = ELEMENT
+    //THE LIST REPRESENTS THE TABLE.
+    public abstract void undo(List<Map<String, Object>> resultSetListMap);
 
 }

@@ -14,20 +14,17 @@ import java.util.Date;
  */
 public class WorkTask extends Task {
 
-    TaskCreator tc = new TaskCreator();
-    private String taskName;
-    private String dateCreated;
-    private boolean completed;
     private final String taskType = "Work";
 
     public WorkTask() {
         Date currentDate = new Date();
         DateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        this.taskName = "null";
-        this.dateCreated = sdf.format(currentDate);
-        this.completed = false;
+        setTaskName("Null");
+        setDateCreated(sdf.format(currentDate));
+        setCompleted(false);
     }
 
+    @Override
     public String getType() {
         return this.taskType;
     }

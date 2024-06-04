@@ -13,15 +13,17 @@ import java.util.Scanner;
  */
 public class TaskUpdater {
 
-    private final Validator iv;
-    private final Printer tp;
-    private final TaskFileManager tfm;
+    private final Validator iv = new InputValidator();
+    private final Printer tp = new TaskPrinter();
+    private final TaskFileManager tfm = new TaskFileManager();
     private final DBManager dbm = new DBManager();
 
-    public TaskUpdater(Validator validator, Printer printer, TaskFileManager taskFileManager) {
-        this.iv = validator;
-        this.tp = printer;
-        this.tfm = taskFileManager;
+    public TaskUpdater() {
+
+    }
+
+    public <E> void updateTaskDetailsDB(int primaryKey, String columnName, E newValue) {
+        dbm.repo.update(primaryKey, columnName, newValue);
     }
 
     protected void updateCompleteStatusDB() {

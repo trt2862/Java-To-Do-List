@@ -14,7 +14,39 @@ public class InputValidator extends Validator {
 
     TaskFileManager tfm = new TaskFileManager();
 
-    //validates if input is Alphabetical
+    public InputValidator() {
+
+    }
+
+    /**
+     * Validates the given name based on the specified minimum and maximum
+     * length constraints.
+     *
+     * @param name the name to be validated
+     * @param max the maximum allowed length for the name
+     * @param min the minimum allowed length for the name
+     * @return -1 if the name is empty, 0 if the name is too short, 1 if the
+     * name is too long, 2 if the name is within the valid length range
+     */
+    @Override
+    public int validateTaskName(String name, int max, int min) {
+        //-1 == name is empty
+        //0 == name is too short
+        //1 == name is too long
+        //2 == name is ok
+        int nameLength = name.length();
+        if (name.isEmpty()) {
+            return -1;
+        }
+        if (nameLength >= max) {
+            return 1;
+        } else if (nameLength < min) {
+            return 0;
+        }
+        return 2;
+    }
+
+//validates if input is Alphabetical
     @Override
     public boolean validateAlphabetical(String input) {
         char[] charArray = input.toCharArray();

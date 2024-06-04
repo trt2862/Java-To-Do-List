@@ -10,7 +10,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -40,7 +39,12 @@ public class TaskManagerRepository implements Repository<Task> {
         try {
             //add task to DB.
             //takes details from task creator.
-            char complete = 'N';
+            char complete;
+            if (task.isCompleted()) {
+                complete = 'Y';
+            } else {
+                complete = 'N';
+            }
             String SQL = "INSERT INTO TASKS (TaskName, DateCreated, Complete, TaskType) VALUES ("
                     + "'" + task.getTaskName() + "', "
                     + "'" + task.getDateCreated() + "', "

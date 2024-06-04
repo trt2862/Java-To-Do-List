@@ -4,11 +4,24 @@
  */
 package TaskManagerPackage;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Caleb
  */
 public abstract class Validator {
+
+    /**
+     *
+     * @param name
+     * @param max
+     * @param min
+     * @return
+     */
+    public int validateTaskName(String name, int max, int min) {
+        return -1;
+    }
 
     public boolean validateAlphabetical(String input) {
 
