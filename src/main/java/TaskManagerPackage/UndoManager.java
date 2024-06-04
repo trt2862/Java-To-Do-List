@@ -53,13 +53,12 @@ public class UndoManager {
         return tasksDBHistory.pop();
     }
 
-    //CANT BE F*CKED FIXING IT RN
     //CONVERTS A RESULT SET TO A LIST OF MAPS FOR PROCESSING
     public List<Map<String, Object>> resultSetToList(ResultSet rs) {
         //create a new list of maps
 
         //e.g. map format:
-        //[0] TaskID => '1'
+        //[0] TaskID(key) => '1'(value)
         //[1] TaskName => 'name'
         //[2] Complete => 'Y'
         //[3] TaskType => 'home/work'
@@ -68,7 +67,7 @@ public class UndoManager {
         //value = data (1,2,3 etc)
         //we will create a new MAP for each row.
         //all the maps are stored in a LIST, so that the maps can be organised.
-        //list of maps to store row data
+        //list of maps<column,element> to store row data
         List<Map<String, Object>> resultSetList = new ArrayList<>();
         try {
 
