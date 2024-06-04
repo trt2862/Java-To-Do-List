@@ -128,9 +128,9 @@ public class TaskManagerRepository implements Repository<Task> {
             rs = stmt.executeQuery();
             if (rs.next()) {
                 int count = rs.getInt(1);
-                return count == 0;
+                return count == 0; // isnt empty
             } else {
-                return true;
+                return true; // is empty
             }
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
