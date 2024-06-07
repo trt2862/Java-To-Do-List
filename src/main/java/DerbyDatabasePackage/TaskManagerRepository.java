@@ -24,10 +24,12 @@ public class TaskManagerRepository implements Repository<Task> {
 
     TaskManagerConnectionManager connManager;
 
+    //default login credentials
     public TaskManagerRepository() {
         connManager = new TaskManagerConnectionManager();
     }
 
+    //custom login credentials
     public TaskManagerRepository(String user, String pass, String url) {
         connManager = new TaskManagerConnectionManager(user, pass, url);
     }
@@ -45,6 +47,7 @@ public class TaskManagerRepository implements Repository<Task> {
             } else {
                 complete = 'N';
             }
+            //SQL Statement
             String SQL = "INSERT INTO TASKS (TaskName, DateCreated, Complete, TaskType) VALUES ("
                     + "'" + task.getTaskName() + "', "
                     + "'" + task.getDateCreated() + "', "
@@ -68,12 +71,14 @@ public class TaskManagerRepository implements Repository<Task> {
         //remove task from DB..
         if (exists(taskId)) {
 
+            //SQL Statement
             String SQL = "DELETE FROM TASKS WHERE TASKID = ?";
             Connection connection = connManager.openConnection();
             PreparedStatement stmt = null;
             try {
                 connection.setAutoCommit(false);
                 stmt = connection.prepareStatement(SQL);
+                //sets '?' to taskId in SQL Statement
                 stmt.setInt(1, taskId);
                 stmt.executeUpdate();
                 connection.commit();
@@ -100,10 +105,12 @@ public class TaskManagerRepository implements Repository<Task> {
             Connection connection = connManager.openConnection();
             PreparedStatement stmt = null;
             try {
-                connection.setAutoCommit(false); //begin transaction with DB
+                //begin transaction with DB
+                connection.setAutoCommit(false);
                 stmt = connection.prepareStatement(SQL);
                 stmt.executeUpdate();
-                connection.commit(); //end transaction with DB
+                //end transaction with DB
+                connection.commit();
             } catch (SQLException ex) {
                 Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
                 return false;
@@ -160,7 +167,7 @@ public class TaskManagerRepository implements Repository<Task> {
             }
 
             stmt = connection.prepareStatement(SQL);
-            stmt.setInt(1, primaryKey);  //set taskID
+            stmt.setInt(1, primaryKey);  //set '?' to taskID
             rs = stmt.executeQuery();
 
             //if a row is returned, the task exists.
@@ -182,7 +189,7 @@ public class TaskManagerRepository implements Repository<Task> {
         Connection connection = connManager.openConnection();
         try {
             PreparedStatement stmt = connection.prepareStatement(SQL, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            stmt.setInt(1, primaryKey);
+            stmt.setInt(1, primaryKey); //set '?' to taskID
             return stmt.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
@@ -220,14 +227,15 @@ public class TaskManagerRepository implements Repository<Task> {
                 //capitalise first letter.
                 String str = (String) value;
                 String cap = str.substring(0, 1).toUpperCase() + str.substring(1);
-                stmt.setString(1, cap);
+                stmt.setString(1, cap); //sets columnName
             } else if (value instanceof Character) {
                 stmt.setString(1, value.toString());
             } else {
+                //more supported types can be added in the future.
                 throw new IllegalArgumentException("Unsupported type: ");
             }
 
-            stmt.setInt(2, primaryKey);
+            stmt.setInt(2, primaryKey); //sets taskID
             stmt.executeUpdate();
             connection.commit();
         } catch (SQLException ex) {
@@ -236,11 +244,6 @@ public class TaskManagerRepository implements Repository<Task> {
             connManager.closeStatement(stmt);
             connManager.closeConnection(connection);
         }
-    }
-
-    @Override
-    public void undo(List<Map<String, Object>> resultSetListMap) {
-
     }
 
 }
