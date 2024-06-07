@@ -25,12 +25,14 @@ public class TaskManagerConnectionManager implements ConnectionManager {
     private static String PASSWORD;
     private static String DB_URL;
 
+    //custom login credentials
     public TaskManagerConnectionManager(String user, String pass, String url) {
         USER_NAME = user;
         PASSWORD = pass;
         DB_URL = url;
     }
 
+    //default login credentials
     public TaskManagerConnectionManager() {
         USER_NAME = "pdc";
         PASSWORD = "pdc";

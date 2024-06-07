@@ -12,6 +12,7 @@ import DerbyDatabasePackage.*;
  */
 public class DBManager {
 
+    //default connection credentials to DB
     private static final String USER_NAME = "pdc";
     private static final String PASSWORD = "pdc";
     private static final String DB_URL = "jdbc:derby:TaskManagerDatabase;create=true";
@@ -22,6 +23,7 @@ public class DBManager {
 
     //to handle DB actions
     //to replace FileManager and tasks.txt
+    //Dependency Injection
     public DBManager(Repository repo, ConnectionManager connManager, TaskManagerSchemaManager schema) {
         this.schema = schema;
         this.repo = (TaskManagerRepository) repo;
