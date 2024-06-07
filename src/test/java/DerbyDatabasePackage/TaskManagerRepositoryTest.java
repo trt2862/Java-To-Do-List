@@ -39,6 +39,7 @@ public class TaskManagerRepositoryTest {
     public void testRemoveAll() {
         System.out.println("removeAll");
         TaskManagerRepository instance = new TaskManagerRepository();
+        instance.add(new WorkTask());
         assertTrue(instance.removeAll());
     }
 
