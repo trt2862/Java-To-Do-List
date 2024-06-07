@@ -829,7 +829,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         List<Map<String, Object>> resultSetListMap = um.commandPopDB();
         if (resultSetListMap != null) {
             //updates the JTable with new values.
-            updateJTable(resultSetListMap);
+            rollbackDatabase(resultSetListMap);
         } else {
             JOptionPane.showMessageDialog(this, "Error. Nothing to Undo");
         }
@@ -923,7 +923,18 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     }
 
     // UPDATES JTABLE WITH NEW VALUES FROM A LIST OF MAPS - SEE UNDOMANAGER CLASS FOR DETAILS
-    private void updateJTable(List<Map<String, Object>> resultSetListMap) {
+    /*
+    Currently, this method removes all entries from database, and rebuilds the database based
+    on data from the resultSetListMap passed in from the UndoManager class
+
+    I recognized this is pretty inefficient seeing as its time complexity is probably something like
+    O(n^2) - hopefully not O(n!) !!!!
+
+    I envisioned creating a comparison based system that compares the existing state with the
+    resultSetListMap and updates/removes accordingly, as this would bring down the time complexity ALOT..
+    but unfortunately i've run out of time so I've stuck with what is working currently.
+     */
+    private void rollbackDatabase(List<Map<String, Object>> resultSetListMap) {
         //removes all tasks from the DB
         dbm.repo.removeAll();
         //iterates over a List of Maps. - Each map contains the column as the key, and the contents as the value.
