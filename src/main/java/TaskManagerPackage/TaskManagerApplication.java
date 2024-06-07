@@ -26,23 +26,24 @@ public class TaskManagerApplication {
         TaskManagerGUI tmGUI = new TaskManagerGUI();
         tmGUI.displayTaskManagerGUI();
 
-        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
-            System.out.println("Enter '?' to see list of commands.");
-            System.out.println("Enter 'exit' to end session.");
-            System.out.println("Max Name Length: " + tc.getMaxNameLength());
-            String userInput;
-            do {
-                System.out.print("> ");
-                System.out.print("");
-                System.out.flush();
-                userInput = reader.readLine().trim();
-                if (!userInput.contentEquals(" ")) {
-                    tmc.processCommand(userInput);
-                }
-            } while (!userInput.equalsIgnoreCase("exit"));
-            System.exit(0);
-        } catch (IOException e) {
-            System.out.println("Fatal Error :(");
-        }
+        //FOR CONSOLE INPUT - COMMENT TO REMOVE CONSOLE OUTPUT.
+//        try ( BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+//            System.out.println("Enter '?' to see list of commands.");
+//            System.out.println("Enter 'exit' to end session.");
+//            System.out.println("Max Name Length: " + tc.getMaxNameLength());
+//            String userInput;
+//            do {
+//                System.out.print("> ");
+//                System.out.print("");
+//                System.out.flush();
+//                userInput = reader.readLine().trim();
+//                if (!userInput.contentEquals(" ")) {
+//                    tmc.processCommand(userInput);
+//                }
+//            } while (!userInput.equalsIgnoreCase("exit"));
+//            System.exit(0);
+//        } catch (IOException e) {
+//            System.out.println("Fatal Error :(");
+//        }
     }
 }
