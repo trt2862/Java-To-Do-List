@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -186,7 +187,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         sortByDialogueBox.setTitle("Sort by");
         sortByDialogueBox.setMinimumSize(new java.awt.Dimension(250, 200));
 
-        sortByComboBoxOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Task ID", "Task Name", "Complete", "Type" }));
+        sortByComboBoxOption.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Task Name", "Complete", "Type" }));
 
         sortByJLabel.setText("Sort By:");
 
@@ -398,14 +399,14 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Task ID", "Task Name", "Complete", "Type"
+                "Task Id", "Task Name", "Complete", "Type"
             }
         ) {
             Class[] types = new Class [] {
                 java.lang.Integer.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                true, false, false, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -424,14 +425,6 @@ public class TaskManagerGUI extends javax.swing.JFrame {
         jTable1.setShowGrid(true);
         jTable1.setShowVerticalLines(false);
         jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setResizable(false);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(50);
-            jTable1.getColumnModel().getColumn(1).setResizable(false);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
-            jTable1.getColumnModel().getColumn(2).setResizable(false);
-            jTable1.getColumnModel().getColumn(3).setResizable(false);
-        }
 
         AddTaskBtn.setBackground(new java.awt.Color(0, 0, 0));
         AddTaskBtn.setFont(new java.awt.Font("Microsoft JhengHei Light", 0, 14)); // NOI18N
@@ -708,6 +701,7 @@ public class TaskManagerGUI extends javax.swing.JFrame {
     // REMOVES DATA FROM DATABASE USING DATA FROM SELECTED ROWS.
     private void removeSelectedYesOptionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_removeSelectedYesOptionMouseClicked
         //get indexs of selected rows.
+        TableModel model = jTable1.getModel();
         int[] rows = jTable1.getSelectedRows();
 
         //saves DB state to undo manager
@@ -715,8 +709,11 @@ public class TaskManagerGUI extends javax.swing.JFrame {
 
         //iterate through each index
         for (int a : rows) {
-            //get task id from row
-            int taskID = Integer.parseInt(jTable1.getValueAt(a, 0).toString());
+            // Convert the view row index to the model row index
+            int modelRow = jTable1.convertRowIndexToModel(a);
+
+            // Get the task ID from the model using the model row index
+            int taskID = Integer.parseInt(model.getValueAt(modelRow, 0).toString());
             //remove task using primary key of task id.
             tr.removeTaskFromDB(taskID);
         }
@@ -912,6 +909,17 @@ public class TaskManagerGUI extends javax.swing.JFrame {
             //close resources
             dbm.connManager.closeResultSet(rs);
         }
+        //hide first column (task ID)
+        hideColumn(jTable1, 0);
+
+    }
+
+    private void hideColumn(JTable table, int columnIndex) {
+        TableColumn column = table.getColumnModel().getColumn(columnIndex);
+        column.setMinWidth(0);
+        column.setMaxWidth(0);
+        column.setPreferredWidth(0);
+        column.setResizable(false);
     }
 
     // UPDATES JTABLE WITH NEW VALUES FROM A LIST OF MAPS - SEE UNDOMANAGER CLASS FOR DETAILS

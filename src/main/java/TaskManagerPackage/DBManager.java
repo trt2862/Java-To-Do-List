@@ -14,7 +14,7 @@ public class DBManager {
 
     private static final String USER_NAME = "pdc";
     private static final String PASSWORD = "pdc";
-    private static final String DB_URL = "jdbc:derby:TaskManagerDatabase(1);create=true";
+    private static final String DB_URL = "jdbc:derby:TaskManagerDatabase;create=true";
 
     TaskManagerSchemaManager schema = new TaskManagerSchemaManager();
     TaskManagerRepository repo = new TaskManagerRepository(USER_NAME, PASSWORD, DB_URL);
