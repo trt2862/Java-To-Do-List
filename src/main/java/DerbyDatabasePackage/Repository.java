@@ -16,7 +16,7 @@ import java.util.Map;
 public interface Repository<E extends Comparable<E>> {
 
     //ADDS ELEMENT TO DATABASE
-    public abstract void add(E element);
+    public abstract boolean add(E element);
 
     //REMOVES ELEMENT FROM DATABASE GIVEN THE PRIMARY KEY
     public abstract boolean remove(int primaryKey);

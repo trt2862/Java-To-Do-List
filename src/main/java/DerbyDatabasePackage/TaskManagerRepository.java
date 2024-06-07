@@ -33,7 +33,7 @@ public class TaskManagerRepository implements Repository<Task> {
     }
 
     @Override
-    public void add(Task task) {
+    public boolean add(Task task) {
         Connection connection = connManager.openConnection();
         Statement stmt = connManager.openStatement(connection);
         try {
@@ -54,11 +54,13 @@ public class TaskManagerRepository implements Repository<Task> {
             connection.commit();
         } catch (SQLException ex) {
             Logger.getLogger(DBManager.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         } finally {
             connManager.closeStatement(stmt);
             connManager.closeConnection(connection);
-            System.out.println("Task Added to DB Successfully.");
         }
+        System.out.println("Task Added to DB Successfully.");
+        return true;
     }
 
     @Override

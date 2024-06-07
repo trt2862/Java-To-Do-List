@@ -36,7 +36,7 @@ public class TaskPrinter implements Printer {
     public void printCommands() {
         System.out.println("Create - Creates new Task - SUPPORTS DB");
         System.out.println("Update - Update Created Tasks - SUPPORTS DB");
-        System.out.println("Undo - Undo Previous Operation - UNSUPPORTED BY DB");
+        System.out.println("Undo - Undo Previous Operation - SUPPORTS BY DB");
         System.out.println("Remove Task - Removes Task Entirely - SUPPORTS DB");
         System.out.println("Remove All - Removes ALL TASKS - SUPPORTS DB");
         System.out.println("Display All - Displays All Tasks - SUPPORTS DB");
