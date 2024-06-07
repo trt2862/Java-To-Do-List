@@ -61,7 +61,7 @@ public abstract class Task implements Comparable<Task> {
 
     @Override
     public int compareTo(Task o) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        return this.taskName.compareTo(o.taskName);
     }
 
 }

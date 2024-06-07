@@ -17,11 +17,14 @@ public class TaskManagerController {
     TaskFileManager tfm = new TaskFileManager();
     TaskRemover tr = new TaskRemover(tp, iv, tfm);
     TaskUpdater tu = new TaskUpdater();
-    DBManager dbm = new DBManager();
 
     public TaskManagerController() {
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     public void processCommand(String userInput) {
         userInput = userInput.toLowerCase();
         switch (userInput) {
@@ -75,9 +78,7 @@ public class TaskManagerController {
             case "undo":
             case "und":
             case "un":
-//                um.commandPopDB()
-//                um.commandPop();
-//                dbm.undo();
+                um.commandPopDB();
                 break;
             case "u":
                 System.out.println("unambiguous command");

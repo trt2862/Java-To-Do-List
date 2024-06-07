@@ -32,7 +32,7 @@ public class TaskCreator extends JFrame {
         return MIN_TASK_NAME_LENGTH;
     }
 
-    public boolean createTaskDB(String taskName, String taskType, boolean completed) {
+    protected boolean createTaskDB(String taskName, String taskType, boolean completed) {
         switch (taskType) {
             case "Home":
                 task = new HomeTask();
@@ -49,6 +49,10 @@ public class TaskCreator extends JFrame {
         return true;
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     protected boolean createTaskConsoleDB() {
         Scanner scan = new Scanner(System.in);
         //prompt user for task name
@@ -102,7 +106,7 @@ public class TaskCreator extends JFrame {
     }
 
     //obselete -- updated to work with DB
-    protected Task createTask() {
+//    protected Task createTask() {
 //        //File IO class
 //        TaskFileManager tfm = new TaskFileManager();
 //        Scanner scan = new Scanner(System.in);
@@ -204,6 +208,6 @@ public class TaskCreator extends JFrame {
 //                System.out.println("Invalid task type! Task creation cancelled.");
 //            }
 //        }
-        return null;
-    }
+//        return null;
+//    }
 }

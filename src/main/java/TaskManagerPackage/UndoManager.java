@@ -25,20 +25,20 @@ public class UndoManager {
     //Deque to store tasks.txt after every operation.
     //Using Deque incase a 'Redo' Function is implemented, as can be removed
     //from both ends of the queue.
-    private final Deque<String> tasksFileHistory;
+//    private final Deque<String> tasksFileHistory;
+//    private String tasksFileContent;
     private final Deque<List<Map<String, Object>>> tasksDBHistory;
-    private String tasksFileContent;
     TaskFileManager tfm = new TaskFileManager();
     DBManager dbm = new DBManager();
 
     public UndoManager() {
-        tasksFileHistory = new ArrayDeque();
         tasksDBHistory = new ArrayDeque();
-        tasksFileContent = "";
+//        tasksFileHistory = new ArrayDeque();
+//        tasksFileContent = "";
     }
 
     //CONVERTS RESULT-SET TO LIST OF MAPS - ADDS TO DEQUE
-    public boolean commandPushDB() {
+    protected boolean commandPushDB() {
         ResultSet set = dbm.repo.getAllElements();
         tasksDBHistory.push(resultSetToList(set));
 
@@ -46,7 +46,7 @@ public class UndoManager {
     }
 
     //POPS TOP OF DEQUE STACK
-    public List<Map<String, Object>> commandPopDB() {
+    protected List<Map<String, Object>> commandPopDB() {
         if (tasksDBHistory.peek() == null) {
             return null;
         }
@@ -54,7 +54,7 @@ public class UndoManager {
     }
 
     //CONVERTS A RESULT SET TO A LIST OF MAPS FOR PROCESSING
-    public List<Map<String, Object>> resultSetToList(ResultSet rs) {
+    protected List<Map<String, Object>> resultSetToList(ResultSet rs) {
         //create a new list of maps
 
         //e.g. map format:
@@ -97,37 +97,35 @@ public class UndoManager {
     }
 
     // ** OBSELETE METHODS ** //
-    public boolean commandPop() {
-        if (tasksFileHistory.peek() == null) {
-            System.out.println("Nothing to undo");
-            return false;
-        }
-        String poppedContent = tasksFileHistory.pop();
-        ArrayList<String> taskList = new ArrayList<>();
-        taskList.add(poppedContent);
-
-        // Write the popped content to the tasks.txt file
-        tfm.writeTasks(taskList);
-
-        return true;
-    }
-
-    public boolean commandPush() {
-        ArrayList<String> taskList = tfm.readTasks();
-        // Convert the ArrayList to a single string and add to Deque
-        StringBuilder builder = new StringBuilder();
-        if (taskList != null) {
-            for (String task : taskList) {
-                builder.append(task).append("\n");
-            }
-            tasksFileContent = builder.toString();
-            tasksFileHistory.push(tasksFileContent);
-        } else if (taskList == null) {
-            //if taskList is empty. store previous state as empty.
-            tasksFileContent = "";
-            tasksFileHistory.push(tasksFileContent);
-        }
-        return true;
-    }
-
+//    public boolean commandPop() {
+//        if (tasksFileHistory.peek() == null) {
+//            System.out.println("Nothing to undo");
+//            return false;
+//        }
+//        String poppedContent = tasksFileHistory.pop();
+//        ArrayList<String> taskList = new ArrayList<>();
+//        taskList.add(poppedContent);
+//
+//        // Write the popped content to the tasks.txt file
+//        tfm.writeTasks(taskList);
+//
+//        return true;
+//    }
+//    public boolean commandPush() {
+//        ArrayList<String> taskList = tfm.readTasks();
+//        // Convert the ArrayList to a single string and add to Deque
+//        StringBuilder builder = new StringBuilder();
+//        if (taskList != null) {
+//            for (String task : taskList) {
+//                builder.append(task).append("\n");
+//            }
+//            tasksFileContent = builder.toString();
+//            tasksFileHistory.push(tasksFileContent);
+//        } else if (taskList == null) {
+//            //if taskList is empty. store previous state as empty.
+//            tasksFileContent = "";
+//            tasksFileHistory.push(tasksFileContent);
+//        }
+//        return true;
+//    }
 }

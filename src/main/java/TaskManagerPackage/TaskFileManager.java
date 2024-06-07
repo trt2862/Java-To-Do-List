@@ -15,14 +15,22 @@ import java.util.ArrayList;
  *
  * @author Caleb
  */
+/*
+    CLASS IS OBSELETE - WAS USED WHEN PROGRAM USED .TXT FILE TO STORE DATA
+    DATA IS NOW STORED IN AN EMBEDDED DATABASE USING APACHE
+ */
 public class TaskFileManager {
 
     public TaskFileManager() {
 
     }
 
+    /*
+    CLASS IS OBSELETE - WAS USED WHEN PROGRAM USED .TXT FILE TO STORE DATA
+    DATA IS NOW STORED IN AN EMBEDDED DATABASE USING APACHE
+     */
     //gets all items in tasks.txt
-    public ArrayList<String> readTasks() {
+    protected ArrayList<String> readTasks() {
         ArrayList<String> tasks = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader("tasks.txt"));
@@ -44,7 +52,11 @@ public class TaskFileManager {
         return tasks;
     }
 
-    public String readTasks(int lineNumber) {
+    /*
+    CLASS IS OBSELETE - WAS USED WHEN PROGRAM USED .TXT FILE TO STORE DATA
+    DATA IS NOW STORED IN AN EMBEDDED DATABASE USING APACHE
+     */
+    protected String readTasks(int lineNumber) {
         int current = 1;
         String task = "";
         try {
@@ -69,8 +81,12 @@ public class TaskFileManager {
         return task;
     }
 
+    /*
+    CLASS IS OBSELETE - WAS USED WHEN PROGRAM USED .TXT FILE TO STORE DATA
+    DATA IS NOW STORED IN AN EMBEDDED DATABASE USING APACHE
+     */
     //gets all tasks in tasks.txt except line number int except
-    public ArrayList<String> readTasksExcept(int except) {
+    protected ArrayList<String> readTasksExcept(int except) {
         ArrayList<String> tasks = new ArrayList<>();
         int lineNumber = 1;
         try {
@@ -89,8 +105,12 @@ public class TaskFileManager {
         return tasks;
     }
 
+    /*
+    CLASS IS OBSELETE - WAS USED WHEN PROGRAM USED .TXT FILE TO STORE DATA
+    DATA IS NOW STORED IN AN EMBEDDED DATABASE USING APACHE
+     */
     //overwrites tasks.txt with tasks Array
-    public void writeTasks(ArrayList<String> tasks) {
+    protected void writeTasks(ArrayList<String> tasks) {
         try ( BufferedWriter writer = new BufferedWriter(new FileWriter("tasks.txt"))) {
             for (String task : tasks) {
                 writer.write(task);

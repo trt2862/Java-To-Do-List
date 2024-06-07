@@ -47,6 +47,10 @@ public class InputValidator extends Validator {
     }
 
 //validates if input is Alphabetical
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     @Override
     public boolean validateAlphabetical(String input) {
         char[] charArray = input.toCharArray();
@@ -59,6 +63,10 @@ public class InputValidator extends Validator {
     }
 
     //validates if input is a number
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     @Override
     public boolean validateNumber(String input) {
         char[] charArray = input.toCharArray();
@@ -74,34 +82,40 @@ public class InputValidator extends Validator {
     //continues to prompt user for correct input until tasks the exists is found.
     //if user enters "exit" then the loop ends, user is taken back to main console
     //where they can continue to enter commands.
-    @Override
-    public String validateTaskExists(String userInput, int totalTasks) {
-        Scanner scanKbd = new Scanner(System.in);
+    /*
+   OBSELETE
+     */
+//    @Override
+//    public String validateTaskExists(String userInput, int totalTasks) {
+//        Scanner scanKbd = new Scanner(System.in);
+//
+//        while (totalTasks < Integer.parseInt(userInput) || Integer.parseInt(userInput) <= 0) {
+//            if (userInput.equalsIgnoreCase("exit")) {
+//                return "exit";
+//            }
+//            System.out.println("Task Not Found! Double Check Task Exists or Check Task Number.");
+//            System.out.print("> ");
+//            userInput = scanKbd.nextLine().trim();
+//            while (!validateNumber(userInput) || userInput.equalsIgnoreCase("exit")) {
+//                if (userInput.equalsIgnoreCase("exit")) {
+//                    return "exit";
+//                }// must also make sure the task exists.
+//                System.out.println("Incorrect Input.");
+//                System.out.println("Please Select a Task Number: ");
+//                System.out.print("> ");
+//                userInput = scanKbd.nextLine().trim();
+//            }
+//        }
+//
+//        return userInput;
+//    }
 
-        while (totalTasks < Integer.parseInt(userInput) || Integer.parseInt(userInput) <= 0) {
-            if (userInput.equalsIgnoreCase("exit")) {
-                return "exit";
-            }
-            System.out.println("Task Not Found! Double Check Task Exists or Check Task Number.");
-            System.out.print("> ");
-            userInput = scanKbd.nextLine().trim();
-            while (!validateNumber(userInput) || userInput.equalsIgnoreCase("exit")) {
-                if (userInput.equalsIgnoreCase("exit")) {
-                    return "exit";
-                }// must also make sure the task exists.
-                System.out.println("Incorrect Input.");
-                System.out.println("Please Select a Task Number: ");
-                System.out.print("> ");
-                userInput = scanKbd.nextLine().trim();
-            }
-        }
-
-        return userInput;
-    }
-
+    /*
+   OBSELETE
+     */
     //simple method to return boolean result if the tasks.txt file is empty or not.
-    @Override
-    public boolean isEmpty() {
-        return tfm.readTasks() == null;
-    }
+//    @Override
+//    public boolean isEmpty() {
+//        return tfm.readTasks() == null;
+//    }
 }

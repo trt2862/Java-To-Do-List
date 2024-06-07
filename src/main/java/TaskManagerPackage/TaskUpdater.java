@@ -26,6 +26,10 @@ public class TaskUpdater {
         dbm.repo.update(primaryKey, columnName, newValue);
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     protected void updateCompleteStatusDB() {
         Scanner scanKbd = new Scanner(System.in);
         if (dbm.repo.isEmpty()) {
@@ -138,7 +142,7 @@ public class TaskUpdater {
     }
 
 // --Obselete
-    protected void updateCompleteStatus() {
+//    protected void updateCompleteStatus() {
 //        Scanner scanKbd = new Scanner(System.in);
 //        if (tfm.readTasks() == null) {
 //            System.out.println("No Tasks to Update!"); // checks if tasks.txt is empty, by checking if first line is null.
@@ -247,10 +251,9 @@ public class TaskUpdater {
 //        }
 ////finally writes updated list to tasks.txt
 //        tfm.writeTasks(updatedTaskList);
-    }
-
+//    }
     //--obselete
-    private void getNewName(Scanner scanKbd, ArrayList<String> taskListToUpdate, int lineToUpdate, ArrayList<String> updatedTaskList) {
+//    private void getNewName(Scanner scanKbd, ArrayList<String> taskListToUpdate, int lineToUpdate, ArrayList<String> updatedTaskList) {
 //        int current;
 //        System.out.println("Enter Name: ");
 //        System.out.print("> ");
@@ -270,5 +273,5 @@ public class TaskUpdater {
 //            updatedTaskList.add(task);
 //        }
 //        System.out.println("Name Updated.");
-    }
+//    }
 }

@@ -4,7 +4,6 @@
  */
 package TaskManagerPackage;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -35,7 +34,10 @@ public class TaskRemover {
         return dbm.repo.removeAll();
     }
 
-    //ALL METHODS BELOW ARE USED WITH CONSOLE.
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     private int removeTaskDialogueDB() {
         int taskNumber;
         int totalTasks;
@@ -77,6 +79,10 @@ public class TaskRemover {
         return -1;
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     private boolean removeAllDialogueDB() {
         System.out.println("Are you sure you want to remove all Tasks?");
         System.out.println("(Y) OR (N)");
@@ -103,21 +109,26 @@ public class TaskRemover {
         return false;
     }
 
-    //USED WITH CONSOLE
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     protected void removeTaskFromConsoleDB() {
         int taskToRemove = removeTaskDialogueDB();
         dbm.repo.remove(taskToRemove);
     }
 
-    //USED WITH CONSOLE
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     protected void removeAllFromConsoleDB() {
         if (removeAllDialogueDB()) {
             dbm.repo.removeAll();
         }
     }
-
     //obselete -- updated to work with DB
-    protected void removeTask() {
+//    protected void removeTask() {
 //        //removeTaskDialogue gets the task number from the user and it's used here.
 //        ArrayList<String> newTaskList;
 //        int taskNumber = removeTaskDialogue();
@@ -128,19 +139,18 @@ public class TaskRemover {
 //            tfm.writeTasks(newTaskList);
 //            System.out.println("Task Removed Successfully.");
 //        }
-    }
+//}
 
-    //obselete -- updated to work with DB
-    protected void removeAll() {
+//obselete -- updated to work with DB
+//    protected void removeAll() {
 //        if (removeAllDialogue()) {
 //            //overwrites text file with empty arraylist
 //            tfm.writeTasks(new ArrayList<>());
 //            System.out.println("Tasks Removed Successfully.");
 //        }
-    }
-
-    //obselete -- updated to work with DB
-    private int removeTaskDialogue() {
+//    }
+//obselete -- updated to work with DB
+//    private int removeTaskDialogue() {
 //        int taskNumber;
 //        int totalTasks;
 //        if (iv.isEmpty()) {
@@ -177,11 +187,10 @@ public class TaskRemover {
 //                }
 //            }
 //        }
-        return -1;
-    }
-
-    //obselete -- updated to work with DB
-    private boolean removeAllDialogue() {
+//        return -1;
+//    }
+//obselete -- updated to work with DB
+//    private boolean removeAllDialogue() {
 //        //confirms with user if they want to remove all tasks.
 //        if (iv.isEmpty() == true) {
 //            System.out.println("No Tasks to Remove!");
@@ -209,6 +218,6 @@ public class TaskRemover {
 //        } else {
 //            System.out.println("Cancelled.");
 //        }
-        return false;
-    }
+//        return false;
+//    }
 }

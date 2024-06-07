@@ -28,6 +28,10 @@ public class TaskPrinter implements Printer {
 
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     @Override
     public void printCommands() {
         System.out.println("Create - Creates new Task - SUPPORTS DB");
@@ -41,6 +45,10 @@ public class TaskPrinter implements Printer {
         System.out.println("? - Display All Commands.");
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     private void printTaskFromDB(int taskId) {
         ResultSet set = dbm.repo.getElement(taskId);
         try {
@@ -52,6 +60,10 @@ public class TaskPrinter implements Printer {
         }
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     @Override
     public void printTaskFromDB() {
         if (dbm.repo.isEmpty()) {
@@ -79,6 +91,10 @@ public class TaskPrinter implements Printer {
         printTaskFromDB(taskId);
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     @Override
     public int printAllTasksFromDB() {
         int rowCount = 0;
@@ -93,6 +109,10 @@ public class TaskPrinter implements Printer {
         return rowCount;
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     private int formatTasks(ResultSet resultSet) throws SQLException {
         //retrieve column count from metaData
         java.sql.ResultSetMetaData metaData = resultSet.getMetaData();
@@ -138,14 +158,18 @@ public class TaskPrinter implements Printer {
         return rowCount;
     }
 
+    /*
+    BELOW METHOD IS FOR CONSOLE INPUT ONLY
+    HAS NO INTERACTION WITH GUI
+     */
     //helper for formatTasks method above
     private String padRight(String text, int length) {
         return String.format("%-" + length + "s", text);
     }
 
     //obselete -- updated to work with DB
-    @Override
-    public int printDisplayAll() {
+//    @Override
+//    public int printDisplayAll() {
 //        int lineCount = 1;
 //        System.out.println("Displaying Tasks...");
 //        ArrayList<String> taskList;
@@ -179,9 +203,8 @@ public class TaskPrinter implements Printer {
 //        printBottom();
 //        System.out.println("Total Tasks: " + (lineCount - 1));
 //        return lineCount - 1; // returns total number of tasks
-        return -1;
-    }
-
+//        return -1;
+//    }
     //obselete -- updated to work with DB
     //Formatting Methods
 //    public void printTop() {
@@ -222,8 +245,8 @@ public class TaskPrinter implements Printer {
 //        }
 //    }
     //obselete -- updated to work with DB
-    @Override
-    public void printDisplay() {
+//    @Override
+//    public void printDisplay() {
 //
 //        if (iv.isEmpty() == true) {
 //            System.out.println("No Tasks to Display!"); // checks if tasks.txt is empty, by checking if first line is null.
@@ -270,5 +293,14 @@ public class TaskPrinter implements Printer {
 //        }
 //        System.out.print("| " + parts[3].trim() + " |"); // Task type
 //        printBottom();
+//    }
+    @Override
+    public void printDisplay() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public int printDisplayAll() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }
